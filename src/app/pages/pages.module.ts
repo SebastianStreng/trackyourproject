@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SmartphoneCardComponent } from '../shared/shared/smartphone-card/smartphone-card.component';
 import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
 
 
@@ -11,8 +12,9 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     CommonModule,
     SmartphoneCardComponent,
-    ButtonModule
+    ButtonModule,
+    TableModule
   ],
-  exports: [SmartphoneCardComponent, ButtonModule]
+  exports: [SmartphoneCardComponent, ButtonModule, TableModule]
 })
 export class PagesModule { }

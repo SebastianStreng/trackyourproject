@@ -1,0 +1,53 @@
+<app-smartphone-card>
+    <p>Your projects work!</p>
+
+    <p-table 
+    [value]="projects" 
+    stripedRows 
+    [style]="{ width: '100%' }"
+    [scrollable]="true"
+    scrollHeight="350px"
+    class="table-with-margin">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Project Name</th>
+                <th>Members</th>
+                <th>Tasks</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-project>
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>
+                    <p-button 
+                        icon="pi pi-user" 
+                        [label]="project.members.length" 
+                        severity="info">
+                    </p-button>
+                </td>
+                <td>
+                    <p-button 
+                        icon="pi pi-list" 
+                        [label]="project.tasks.length" 
+                        severity="success">
+                    </p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <hr>
+    
+    <div class="button-wrapper">
+        <button class="btn">
+            <span>Assign to new Project</span>
+            <div class="container">
+                <!-- SVG für ein Plus-Symbol -->
+                <svg height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </div>
+        </button>
+    </div>
+</app-smartphone-card>
