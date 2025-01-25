@@ -10,27 +10,19 @@
     class="table-with-margin">
         <ng-template pTemplate="header">
             <tr>
-                <th>Project Name</th>
-                <th>Members</th>
-                <th>Tasks</th>
+                <th>Projects</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-project>
             <tr>
-                <td>{{ project.name }}</td>
                 <td>
-                    <p-button 
-                        icon="pi pi-user" 
-                        [label]="project.members.length" 
-                        severity="info">
-                    </p-button>
-                </td>
-                <td>
-                    <p-button 
-                        icon="pi pi-list" 
-                        [label]="project.tasks.length" 
-                        severity="success">
-                    </p-button>
+                    <button class="cta">
+                        <span>{{project.name}}</span>
+                        <svg width="15px" height="10px" viewBox="0 0 13 10">
+                          <path d="M1,5 L11,5"></path>
+                          <polyline points="8 1 12 5 8 9"></polyline>
+                        </svg>
+                      </button>
                 </td>
             </tr>
         </ng-template>

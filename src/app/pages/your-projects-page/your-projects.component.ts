@@ -21,6 +21,11 @@ export class YourProjectsComponent {
     return project?.tasks.map(task => task.title).join(', ') || 'No tasks';
   }
 
+  onProjectClick(project: any): void {
+    console.log('Project clicked:', project);
+    
+  }
+
   projects = [
     {
       id: '1',
