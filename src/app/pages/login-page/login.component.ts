@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from 'src/app/shared/shared/shared.module';
-import { SmartphoneCardComponent } from 'src/app/shared/shared/smartphone-card/smartphone-card.component';
+import { PagesModule } from '../pages.module';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, SharedModule, SmartphoneCardComponent],
+  imports: [CommonModule, PagesModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
