@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PagesModule } from "../pages.module";
-import { SmartphoneCardComponent } from "../../shared/shared/smartphone-card/smartphone-card.component";
+import { SmartphoneCardComponent } from "../../shared/smartphone-card/smartphone-card.component";
 
 @Component({
   selector: 'app-your-project-page',
@@ -23,7 +23,7 @@ export class YourProjectsComponent {
 
   onProjectClick(project: any): void {
     console.log('Project clicked:', project);
-    
+    // Hier kannst du zusätzliche Logik hinzufügen
   }
 
   projects = [
