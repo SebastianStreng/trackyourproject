@@ -1,7 +1,52 @@
+<app-dialog-card>
+    <!-- Projektnamen anzeigen -->
+    <div class="group">
+      <input required="" type="text" class="input" [value]="project.name" readonly>
+      <span class="highlight"></span>
+      <span class="bar"></span>
+      <label>Project Name</label>
+    </div>
+  
+    <!-- Anzahl der Tasks anzeigen -->
+    <div class="group">
+      <input required="" type="text" class="input" [value]="project.tasks.length" readonly>
+      <span class="highlight"></span>
+      <span class="bar"></span>
+      <label>Number of Tasks</label>
+    </div>
+  
+    <!-- Anzahl der Mitglieder anzeigen -->
+    <div class="group">
+      <input required="" type="text" class="input" [value]="project.members.length" readonly>
+      <span class="highlight"></span>
+      <span class="bar"></span>
+      <label>Number of Members</label>
+    </div>
+  
+    <!-- Beschreibung bearbeiten -->
+    <div class="group">
+      <textarea required="" class="input" [(ngModel)]="project.description"></textarea>
+      <span class="highlight"></span>
+      <span class="bar"></span>
+      <label>Description</label>
+    </div>
 
-    <app-dialog-card>
-        <p>project-information-dialog works!</p>
-
-    </app-dialog-card>
-
-
+    <p-table [value]="project.tasks" [scrollable]="true" scrollHeight="200px" [tableStyle]="{'min-width': '10rem'}">
+        <!-- Tabellen-Header -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Tasks</th>
+          </tr>
+        </ng-template>
+    
+        <!-- Tabellen-Körper -->
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>
+              <button pButton type="button" label="{{ task.title }}"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+  </app-dialog-card>
+  

@@ -7,6 +7,7 @@ import { ProjectInformationDialogComponent } from './shared/dialogs/project-info
 import { UserInformationDialogComponent } from './shared/dialogs/user-information-dialog/user-information-dialog.component';
 import { DialogCardComponent } from "./shared/dialog-card/dialog-card.component";
 
+
 @Component({
   imports: [
     RouterModule,

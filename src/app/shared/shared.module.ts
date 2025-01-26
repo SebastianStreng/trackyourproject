@@ -3,6 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { SmartphoneCardComponent } from './smartphone-card/smartphone-card.component';
 import { DialogCardComponent } from './dialog-card/dialog-card.component';
+import { FormsModule } from '@angular/forms';
+import { IftaLabelModule } from 'primeng/iftalabel';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
 
 
@@ -12,8 +18,24 @@ import { DialogCardComponent } from './dialog-card/dialog-card.component';
     CommonModule,
     CardModule,
     SmartphoneCardComponent,
-    DialogCardComponent
+    DialogCardComponent,
+    IftaLabelModule,
+    FormsModule,
+    IconFieldModule,
+    InputIconModule,
+    ButtonModule,
+    TableModule
   ],
-  exports: [CardModule, SmartphoneCardComponent, DialogCardComponent]
+  exports: [FormsModule, 
+    CardModule, 
+    SmartphoneCardComponent, 
+    DialogCardComponent, 
+    IftaLabelModule, 
+    IconFieldModule, 
+    InputIconModule, 
+    ButtonModule, 
+    TableModule
+  ]
+
 })
 export class SharedModule { }
