@@ -1,5 +1,5 @@
 export interface Project {
-    id: string; 
+    id: number; 
     name: string; 
     description?: string; 
     startDate: Date; 
@@ -10,13 +10,15 @@ export interface Project {
   
   // Interface für ein Projektmitglied
   export interface ProjectMember {
-    id: string; 
+    id: number; 
     name: string; 
+    email: string; 
+    password: string; 
   }
   
 
   export interface Task {
-    id: string; 
+    id: number; 
     title: string; 
     description?: string; 
     assignedTo?: string; 

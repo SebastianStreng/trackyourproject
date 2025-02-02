@@ -11,18 +11,18 @@ import { Project, ProjectMember, Task, TaskStatus } from 'src/app/core/models/pr
 })
 export class ProjectInformationDialogComponent {
   project: Project = {
-    id: '1',
+    id: 1,
     name: 'Website Redesign',
     description: 'A project to revamp the corporate website.',
     startDate: new Date('2023-01-01'),
     endDate: new Date('2023-06-30'),
     members: [
-      { id: 'm1', name: 'Alice' },
-      { id: 'm2', name: 'Bob' },
+      { id: 1, name: 'Alice', email: "mail", password: "password"},
+      { id: 2, name: 'Bob' ,email: "mail", password: "password"},
     ],
     tasks: [
       {
-        id: 't1',
+        id: 1,
         title: 'Design mockups',
         description: 'Create initial design mockups for the homepage.',
         assignedTo: 'Alice',
@@ -30,7 +30,7 @@ export class ProjectInformationDialogComponent {
         status: TaskStatus.InProgress,
       },
       {
-        id: 't2',
+        id: 2,
         title: 'Implement homepage',
         description: 'Develop the homepage using the approved design.',
         assignedTo: 'Bob',
@@ -38,7 +38,7 @@ export class ProjectInformationDialogComponent {
         status: TaskStatus.NotStarted,
       },
       {
-        id: 't3',
+        id: 3,
         title: 'Implement homepage',
         description: 'Develop the homepage using the approved design.',
         assignedTo: 'Bob',
@@ -46,7 +46,7 @@ export class ProjectInformationDialogComponent {
         status: TaskStatus.NotStarted,
       },
       {
-        id: 't4',
+        id: 4,
         title: 'Implement homepage',
         description: 'Develop the homepage using the approved design.',
         assignedTo: 'Bob',
