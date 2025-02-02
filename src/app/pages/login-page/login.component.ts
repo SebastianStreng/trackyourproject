@@ -1,11 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PagesModule } from '../pages.module';
+import { DialogService } from 'primeng/dynamicdialog';
+import { SmartphoneCardComponent } from 'src/app/shared/smartphone-card/smartphone-card.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, PagesModule],
+  imports: [CommonModule, SmartphoneCardComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {}
+export class LoginComponent {
+
+  constructor () {
+    
+  }
+}

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PagesModule } from "../pages.module";
 import { SmartphoneCardComponent } from "../../shared/smartphone-card/smartphone-card.component";
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-your-project-page',
-  imports: [CommonModule, PagesModule],
+  imports: [CommonModule, SmartphoneCardComponent, TableModule],
   templateUrl: './your-projects.component.html',
   styleUrls: ['./your-projects.component.css'], 
 })
