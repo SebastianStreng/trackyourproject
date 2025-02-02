@@ -54,8 +54,6 @@ export class ProjectInformationDialogComponent {
         status: TaskStatus.NotStarted,
       },
     ],
-    createdAt: new Date('2023-01-01'),
-    updatedAt: new Date('2023-01-15'),
   };
 
   goHome (){

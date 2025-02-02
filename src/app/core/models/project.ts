@@ -6,8 +6,6 @@ export interface Project {
     endDate?: Date; 
     members: ProjectMember[]; 
     tasks: Task[]; 
-    createdAt: Date; 
-    updatedAt?: Date; 
   }
   
   // Interface für ein Projektmitglied
