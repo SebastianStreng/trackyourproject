@@ -12,6 +12,7 @@ import { RegisterComponent } from './pages/login-page/register/register.componen
 @Component({
   imports: [
     RouterModule,
+
     LoginComponent,
     SelectionPageComponent,
     YourProjectsComponent,

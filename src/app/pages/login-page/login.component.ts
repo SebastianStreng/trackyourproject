@@ -12,22 +12,21 @@ import { AuthenticationService } from 'src/app/core/services/auth-service/authen
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  username = '';
+  email = '';
   password = '';
   error = '';
 
-  constructor (private authService: AuthenticationService, private router: Router) {
-    
-  }
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   signIn() {
-    this.authService.login(this.username, this.password).subscribe(
+    this.authService.login(this.email, this.password).subscribe(
       () => {
-        this.router.navigate(['Customize']);
+        this.router.navigate(['Selection']); 
       },
       (error) => {
-        this.error = 'Invalid username or password';
+        this.error = 'Invalid email or password';
       }
     );
   }
+
 }
