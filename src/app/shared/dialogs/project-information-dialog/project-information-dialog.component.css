@@ -1,3 +1,7 @@
+.group-container {
+  margin-top: 20px;
+}
+
 .group {
     position: relative;
     margin-bottom: 30px; /* Abstand zwischen den Komponenten erhöhen */
@@ -57,5 +61,47 @@
     width: 100%;
     height: 1px;
     background: #757575;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    padding: 20px 15px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .close-button {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+
+  .footer-button {
+    background-color: #2575fc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
   }
   

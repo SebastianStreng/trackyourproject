@@ -37,8 +37,37 @@ export class ProjectInformationDialogComponent {
         dueDate: new Date('2023-03-30'),
         status: TaskStatus.NotStarted,
       },
+      {
+        id: 't3',
+        title: 'Implement homepage',
+        description: 'Develop the homepage using the approved design.',
+        assignedTo: 'Bob',
+        dueDate: new Date('2023-03-30'),
+        status: TaskStatus.NotStarted,
+      },
+      {
+        id: 't4',
+        title: 'Implement homepage',
+        description: 'Develop the homepage using the approved design.',
+        assignedTo: 'Bob',
+        dueDate: new Date('2023-03-30'),
+        status: TaskStatus.NotStarted,
+      },
     ],
     createdAt: new Date('2023-01-01'),
     updatedAt: new Date('2023-01-15'),
   };
+
+  goHome (){
+
+  }
+
+  goBack(){
+
+  }
+
+  closeDialog(){
+    
+  }
+
 }
