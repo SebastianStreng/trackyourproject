@@ -2,14 +2,18 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SmartphoneCardComponent } from "../../shared/smartphone-card/smartphone-card.component";
 import { TableModule } from 'primeng/table';
+import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-your-project-page',
-  imports: [CommonModule, SmartphoneCardComponent, TableModule],
+  imports: [CommonModule, SmartphoneCardComponent, TableModule, ButtonModule],
   templateUrl: './your-projects.component.html',
   styleUrls: ['./your-projects.component.css'], 
 })
 export class YourProjectsComponent {
+
+    constructor(private router: Router) {}
 
   getProjectMembers(projectId: string): string {
     const project = this.projects.find(p => p.id === projectId);
@@ -24,6 +28,14 @@ export class YourProjectsComponent {
   onProjectClick(project: any): void {
     console.log('Project clicked:', project);
     // Hier kannst du zusätzliche Logik hinzufügen
+  }
+
+  goHome() {
+    this.router.navigate(['/']);
+  }
+
+  goBack() {
+    this.router.navigate(['..']);
   }
 
   projects = [

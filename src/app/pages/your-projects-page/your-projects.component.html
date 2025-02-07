@@ -1,12 +1,10 @@
 <app-smartphone-card>
-    <p>Your projects work!</p>
-
     <p-table 
     [value]="projects" 
     stripedRows 
     [style]="{ width: '100%' }"
     [scrollable]="true"
-    scrollHeight="350px"
+    scrollHeight="470px"
     class="table-with-margin">
         <ng-template pTemplate="header">
             <tr>
@@ -41,5 +39,10 @@
                 </svg>
             </div>
         </button>
+    </div>
+
+    <div class="navigation-buttons" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+        <p-button icon="pi pi-home" [rounded]="true" severity="info" (click)="goHome()"></p-button>
+        <p-button icon="pi pi-arrow-left" [rounded]="true" severity="info" (click)="goBack()"></p-button>
     </div>
 </app-smartphone-card>
