@@ -1,38 +1,39 @@
 <app-smartphone-card>
     <p-table 
-    [value]="projects" 
-    stripedRows 
-    [style]="{ width: '100%', minHeight: '470px', maxHeight: '470px' }"
-    [scrollable]="true"
-    scrollHeight="470px"
-    class="table-with-margin">
+        [value]="projects" 
+        stripedRows 
+        [style]="{ width: '100%', minHeight: '480px', maxHeight: '470px' }"
+        [scrollable]="true"
+        scrollHeight="470px"
+        class="table-with-margin">
         <ng-template pTemplate="header">
-            <tr>
-                <th>Your Current Projects</th>
-            </tr>
+
         </ng-template>
         <ng-template pTemplate="body" let-project>
             <tr>
                 <td>
-                    <button class="cta">
+                    <button class="cta" (click)="show(project)">
                         <span>{{project.name}}</span>
                         <svg width="15px" height="10px" viewBox="0 0 13 10">
                           <path d="M1,5 L11,5"></path>
                           <polyline points="8 1 12 5 8 9"></polyline>
                         </svg>
-                      </button>
+                    </button>
                 </td>
             </tr>
         </ng-template>
     </p-table>
 
     <hr>
+
+    <div *ngIf="selectedProject">
+        <p>Selected Project: {{ selectedProject.name }}</p>
+    </div>
     
     <div class="button-wrapper">
         <button class="btn">
             <span>Assign to new Project</span>
             <div class="container">
-                <!-- SVG für ein Plus-Symbol -->
                 <svg height="35" width="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>

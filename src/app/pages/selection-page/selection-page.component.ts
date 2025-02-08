@@ -38,7 +38,6 @@ export class SelectionPageComponent {
   navigateToAllProjects() {
     this.projectService.getAll().subscribe({
       next: (projects: any[]) => {
-        // ✅ Speichere ALLE Projekte in `sessionStorage`
         sessionStorage.setItem('projects', JSON.stringify(projects));
         
         this.router.navigate(['/Projects']);
