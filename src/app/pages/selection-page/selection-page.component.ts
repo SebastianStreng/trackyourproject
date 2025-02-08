@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { CreatePropertyComponent } from "../../features/create-property/create-property.component";
 import { SmartphoneCardComponent } from "../../shared/smartphone-card/smartphone-card.component";
 import { Router } from '@angular/router';
+import { ProjectService } from 'src/app/core/services/project-service/project-service';
+import { AuthenticationService } from 'src/app/core/services/auth-service/authentification-service';
 
 @Component({
   selector: 'app-selection-page',
@@ -12,9 +14,38 @@ import { Router } from '@angular/router';
 })
 export class SelectionPageComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private projectService: ProjectService, private authService: AuthenticationService) {}
 
   navigateToYourProjects() {
-    this.router.navigate(['/YourProjects']);
+    const currentUser = this.authService.getCurrentProjectMember();
+  
+    this.projectService.getAll().subscribe({
+      next: (projects: any[]) => {
+        const userProjects = projects.filter(project => 
+          project.members && project.members.some((member: { id: number }) => member.id === currentUser.id)
+        );
+  
+        sessionStorage.setItem('projects', JSON.stringify(userProjects));
+
+        this.router.navigate(['/Projects']);
+      },
+      error: (err) => {
+        console.error('Error fetching projects:', err);
+      }
+    });
+  }
+  
+  navigateToAllProjects() {
+    this.projectService.getAll().subscribe({
+      next: (projects: any[]) => {
+        // ✅ Speichere ALLE Projekte in `sessionStorage`
+        sessionStorage.setItem('projects', JSON.stringify(projects));
+        
+        this.router.navigate(['/Projects']);
+      },
+      error: (err) => {
+        console.error('Error fetching projects:', err);
+      }
+    });
   }
 }
