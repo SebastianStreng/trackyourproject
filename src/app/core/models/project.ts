@@ -8,7 +8,6 @@ export interface Project {
     tasks: Task[]; 
   }
   
-  // Interface für ein Projektmitglied
   export interface ProjectMember {
     id: number; 
     name: string; 
@@ -19,12 +18,15 @@ export interface Project {
 
   export interface Task {
     id: number; 
+    projectId: number;  
     title: string; 
     description?: string; 
-    assignedTo?: string; 
-    dueDate?: Date; 
+    assignedTo?: string | ProjectMember | null;
+    dueDate?: Date | null;  // ✅ Null explizit erlaubt
     status: TaskStatus; 
-  }
+}
+
+  
   
 
   export enum TaskStatus {

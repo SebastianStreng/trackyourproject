@@ -31,9 +31,11 @@ export class ProjectsComponent implements OnInit {
     }
   }
 
-show (project: Project){
-
-}
+  show(project: Project) {
+    this. selectedProject = project; 
+    sessionStorage.setItem('selectedProject', JSON.stringify(project)); 
+    this.router.navigate(['/ProjectInformation'], { state: { selectedProject: project } });
+  }
 
   goHome() {
     this.router.navigate(['/']);
