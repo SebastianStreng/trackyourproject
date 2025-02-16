@@ -55,11 +55,6 @@ export class ProjectInformationDialogComponent implements OnInit {
         this.allTasks = tasks;
         console.log('✅ All tasks loaded:', this.allTasks);
         
-        this.allTasks.forEach((task, index) => {
-          console.log(`🔍 Task ${index + 1}:`, task);
-          console.log(`📌 Task ProjectID:`, task.projectId);
-        });
-  
         this.filterTasksByProjectId();
       },
       error: (err) => console.error('❌ Error fetching all tasks:', err),
@@ -76,11 +71,8 @@ export class ProjectInformationDialogComponent implements OnInit {
         return;
       }
   
-      console.log('📋 All tasks before filtering:', this.allTasks);
-  
-      // 🛠 Sicherstellen, dass beide Werte als String verglichen werden
-      this.projectTasks = this.allTasks.filter(t => String(t.projectId) === String(this.project?.id));
-  
+      this.projectTasks = this.allTasks.filter(task => task.id == this.project?.id)
+
       if (this.projectTasks.length === 0) {
         console.warn(`⚠️ Warning: No tasks found for project ID ${this.project.id}`);
       }
@@ -105,6 +97,9 @@ export class ProjectInformationDialogComponent implements OnInit {
     this.router.navigate(['/Projects']);
   }
 
+  addTask(){
+
+  }
 
   getAssignedTo(task: Task): string {
     if (!task.assignedTo) {
