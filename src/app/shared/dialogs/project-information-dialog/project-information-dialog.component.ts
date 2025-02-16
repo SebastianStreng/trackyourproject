@@ -116,4 +116,12 @@ export class ProjectInformationDialogComponent implements OnInit {
   
     return 'Unknown';
   }
+
+  getTaskStatus(task: Task){
+    if(!task.status) {
+      return "no Status";
+    }
+    return task.status; 
+
+  }
 }
