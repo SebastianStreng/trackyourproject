@@ -13,12 +13,22 @@
     font-size: 1.5rem;
     font-weight: bold;
   }
-
+  
   .info {
     display: flex;
-    flex-direction: column;
-    gap: 15px; 
+    justify-content: space-between; /* linke und rechte Spalte an den Rändern */
+    align-items: center;
     padding: 20px 15px;
+  }
+  
+  .left-info {
+    display: flex;
+    flex-direction: column; /* Stapelt die drei Werte untereinander */
+    gap: 10px; /* Kleiner Abstand zwischen den Einträgen */
+  }
+  
+  .right-info {
+    /* Hier kannst du weitere Styles ergänzen, falls nötig */
   }
   
   .close-button {
@@ -46,7 +56,7 @@
   .footer-container {
     display: flex;
     justify-content: space-between;
-    padding: 60px 20px;
+    padding: 20px 20px;
   }
 
   .footer-button {

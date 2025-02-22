@@ -26,8 +26,6 @@ export interface Project {
     status: TaskStatus; 
 }
 
-  
-  
 
   export enum TaskStatus {
     NotStarted = 'Not Started',
