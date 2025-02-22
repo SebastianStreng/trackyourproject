@@ -7,6 +7,7 @@ import { ProjectInformationDialogComponent } from './shared/dialogs/project-info
 import { UserInformationDialogComponent } from './shared/dialogs/user-information-dialog/user-information-dialog.component';
 import { DialogCardComponent } from "./shared/dialog-card/dialog-card.component";
 import { RegisterComponent } from './pages/login-page/register/register.component';
+import { AddTaskComponent } from './shared/dialogs/add-task-dialog/add-task.component';
 
 
 @Component({
@@ -19,7 +20,8 @@ import { RegisterComponent } from './pages/login-page/register/register.componen
     ProjectInformationDialogComponent,
     UserInformationDialogComponent,
     DialogCardComponent,
-    RegisterComponent
+    RegisterComponent,
+    AddTaskComponent
 ],
   selector: 'app-root',
   templateUrl: './app.component.html',

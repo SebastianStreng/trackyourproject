@@ -1,0 +1,42 @@
+<app-dialog-card>
+    <div class="header-container">
+        <h2 class="card-header">{{ project?.name }}</h2>
+        <button class="close-button" (click)="closeDialog()">&times;</button>
+      </div>
+
+      <div class = "info">
+        <div>Project ID: {{ project?.id }}</div>
+        <div>Project Name: {{ project?.name }}</div>
+      </div>
+
+      <div class = "textBox-container">
+
+
+
+        <input pInputText [(ngModel)]="title" [style]="{'width': '300px'}" type="text" pSize="large" placeholder="Task Name" />
+
+        <p-select 
+        size="large"
+        [style]="{'width': '300px'}"
+        [options]="members" 
+        [(ngModel)]="assignedTo" 
+        optionLabel="name" 
+        placeholder="Assign to Member" 
+        class="w-full md:w-56" />
+
+        <textarea pTextarea [(ngModel)]="description" [style]="{'width': '300px'}"pSize="large" placeholder="Description" rows="3"></textarea>
+
+        <p-datepicker [(ngModel)]="date" [style]="{'width': '300px'}" size="large" placeholder="Pick a Due Date" dateFormat="dd.mm.yy" />
+      </div>
+
+      <div class = "handleTask">
+        <p-button icon="pi pi-trash" aria-label="Save" />
+        <p-button icon="pi pi-check" aria-label="Save" />
+      </div>
+
+      <div class="footer-container">
+        <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
+        <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+      </div>
+
+</app-dialog-card>

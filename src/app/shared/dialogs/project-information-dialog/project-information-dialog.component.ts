@@ -99,7 +99,7 @@ export class ProjectInformationDialogComponent implements OnInit {
 
   addTask(){
 
-  }
+  };
 
   getAssignedTo(task: Task): string {
     if (!task.assignedTo) {
