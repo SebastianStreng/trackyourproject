@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from "../../shared.module";
 import { DialogCardComponent } from "../../dialog-card/dialog-card.component";
 import { Project, ProjectMember, TaskStatus } from 'src/app/core/models/project';
 import { Router } from '@angular/router';
 import { TaskService } from 'src/app/core/services/task-service/task-service';
-import { IftaLabelModule } from 'primeng/iftalabel';
 import { SelectModule } from 'primeng/select';
 import { Task } from 'src/app/core/models/project';
 import { TextareaModule } from 'primeng/textarea';
@@ -25,12 +23,13 @@ export class AddTaskComponent implements OnInit {
   project: Project | null = null;
   task: Task | null = null;
   title = '';
-  assignedTo: ProjectMember | null = null;; 
-  members: ProjectMember [] = []; 
+  assignedTo: string | ProjectMember | null = null;
+  members: ProjectMember[] = [];
   description = '';
-  date = ''
+  dueDate= '';
   status = TaskStatus;
   selectedStatus: TaskStatus | null = null;
+  alreadyExists = false; 
 
   statusOptions = [
     { label: 'Not Started', value: TaskStatus.NotStarted },
@@ -41,17 +40,59 @@ export class AddTaskComponent implements OnInit {
   
   constructor(private router: Router, private taskService: TaskService) {}
   ngOnInit(): void {
-
-
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      if (navigation.extras.state['task']) {
+        this.task = navigation.extras.state['task'];
+        this.alreadyExists = true;
+        this.title = this.task?.title ?? '';
+        this.description = this.task?.description ?? '';
+        this.assignedTo = this.task?.assignedTo ?? null;
+        this.dueDate = this.task?.dueDate ? new Date(this.task.dueDate).toISOString().substring(0, 10) : '';
+        this.selectedStatus = this.task?.status ?? TaskStatus.NotStarted;
+      }
+      if (navigation.extras.state['project']) {
+        this.project = navigation.extras.state['project'];
+      }
+    } else {
+      const storedProject = sessionStorage.getItem('selectedProject');
+      this.project = storedProject ? JSON.parse(storedProject) : null;
+      this.alreadyExists = false;
+    }
   }
-
-
-  AddOrUpdateTask(){
-
+  
+  AddOrUpdateTask() {
+    const taskData: Task = {
+      id: this.task ? this.task.id : 0,
+      projectId: this.project ? this.project.id : 0, 
+      title: this.title,
+      description: this.description,
+      assignedTo: this.assignedTo,
+      dueDate: this.dueDate ? new Date(this.dueDate) : null,
+      status: this.selectedStatus ?? TaskStatus.NotStarted,
+    };
+  
+    if (this.alreadyExists) {
+      this.taskService.update(taskData).subscribe({
+        next: (updatedTask) => {
+          console.log('Task updated:', updatedTask);
+          this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+        },
+        error: (err) => console.error('Error updating task:', err),
+      });
+    } else {
+      this.taskService.create(taskData).subscribe({
+        next: (createdTask) => {
+          console.log('Task created:', createdTask);
+          this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+        },
+        error: (err) => console.error('Error creating task:', err),
+      });
+    }
   }
-
+  
   closeDialog() {
-    this.router.navigate(['/ProjectInformation'], { state: { project: this.project} });
+    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
   }
 
   goHome() {
@@ -62,3 +103,4 @@ export class AddTaskComponent implements OnInit {
     this.router.navigate(['/Projects']);
   }
 }
+

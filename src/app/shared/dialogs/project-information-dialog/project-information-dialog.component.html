@@ -36,7 +36,7 @@
     <ng-template pTemplate="body" let-task>
       <tr>
         <td>
-          <button pButton type="button">{{ task?.title }}</button>
+          <button pButton (click)="addTask(task)" type="button">{{ task?.title }}</button>
         </td>
         <td>
           {{ getAssignedTo(task) }}

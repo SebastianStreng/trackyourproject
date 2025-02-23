@@ -6,7 +6,6 @@
 
       <div class="info">
         <div class="left-info">
-            <div>Project Name: {{ project?.name }}</div>
           <div>Project ID: {{ project?.id }}</div>
           <div>Task ID: {{ task?.id }}</div>
         </div>
@@ -40,7 +39,7 @@
 
         <textarea pTextarea [(ngModel)]="description" [style]="{'width': '300px'}"pSize="large" placeholder="Description" rows="3"></textarea>
 
-        <p-datepicker [(ngModel)]="date" [style]="{'width': '300px'}" size="large" placeholder="Pick a Due Date" dateFormat="dd.mm.yy" />
+        <p-datepicker [(ngModel)]="dueDate" [style]="{'width': '300px'}" size="large" placeholder="Pick a Due Date" dateFormat="dd.mm.yy" />
       </div>
 
       <div class = "handleTask">

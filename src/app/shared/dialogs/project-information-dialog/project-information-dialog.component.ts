@@ -97,9 +97,11 @@ export class ProjectInformationDialogComponent implements OnInit {
     this.router.navigate(['/Projects']);
   }
 
-  addTask(){
-
-  };
+    addTask(task?: Task) {
+      console.log(`✅ Add ${task}`);
+      this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
+    }
+    
 
   getAssignedTo(task: Task): string {
     if (!task.assignedTo) {
