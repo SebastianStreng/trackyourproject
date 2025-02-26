@@ -22,7 +22,7 @@ export class AddTaskComponent implements OnInit {
 
   project: Project | null = null;
   task: Task | null = null;
-  title = '';
+  title? : string;
   assignedTo: string | ProjectMember | null = null;
   members: ProjectMember[] = [];
   description = '';
@@ -41,36 +41,56 @@ export class AddTaskComponent implements OnInit {
   constructor(private router: Router, private taskService: TaskService) {}
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
+  
+    console.log("✅ Navigation Object:", navigation);
+  
     if (navigation?.extras.state) {
+      console.log("✅ Navigation State:", navigation.extras.state);
+  
       if (navigation.extras.state['task']) {
         this.task = navigation.extras.state['task'];
         this.alreadyExists = true;
-        this.title = this.task?.title ?? '';
-        this.description = this.task?.description ?? '';
-        this.assignedTo = this.task?.assignedTo ?? null;
-        this.dueDate = this.task?.dueDate ? new Date(this.task.dueDate).toISOString().substring(0, 10) : '';
-        this.selectedStatus = this.task?.status ?? TaskStatus.NotStarted;
+        sessionStorage.setItem('selectedTask', JSON.stringify(this.task));  
       }
+      
       if (navigation.extras.state['project']) {
         this.project = navigation.extras.state['project'];
+        sessionStorage.setItem('selectedProject', JSON.stringify(this.project)); 
       }
     } else {
+      console.warn('⚠️ No navigation state found! Loading from sessionStorage...');
+  
+      const storedTask = sessionStorage.getItem('selectedTask');
+      this.task = storedTask ? JSON.parse(storedTask) : null;
+  
       const storedProject = sessionStorage.getItem('selectedProject');
       this.project = storedProject ? JSON.parse(storedProject) : null;
-      this.alreadyExists = false;
     }
+  
+
+    this.title = this.task?.title ?? '';  
+    this.description = this.task?.description ?? '';
+    this.assignedTo = this.task?.assignedTo ?? null;
+    this.dueDate = this.task?.dueDate ? new Date(this.task.dueDate).toISOString().substring(0, 10) : '';
+    this.selectedStatus = this.task?.status ?? TaskStatus.NotStarted;
+  
+    console.log("✅ Final Task state in ngOnInit:", this.task);
   }
+  
+  
+  
   
   AddOrUpdateTask() {
     const taskData: Task = {
       id: this.task ? this.task.id : 0,
       projectId: this.project ? this.project.id : 0, 
-      title: this.title,
-      description: this.description,
-      assignedTo: this.assignedTo,
+      title: this.title ?? '',  
+      description: this.description ?? '',
+      assignedTo: this.assignedTo ?? null,
       dueDate: this.dueDate ? new Date(this.dueDate) : null,
       status: this.selectedStatus ?? TaskStatus.NotStarted,
     };
+  
   
     if (this.alreadyExists) {
       this.taskService.update(taskData).subscribe({

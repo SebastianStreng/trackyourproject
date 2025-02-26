@@ -18,7 +18,10 @@ export class ProjectInformationDialogComponent implements OnInit {
   project: Project | null = null;
   projectDescription = '';
   allTasks: Task[] = [];  
-  projectTasks: Task[] = [];  // ✅ Gefilterte Tasks für das ausgewählte Projekt
+  projectTasks: Task[] = [];  
+  selectedTask?: Task;
+
+
 
   constructor(private router: Router, private taskService: TaskService) {}
 
@@ -48,6 +51,31 @@ export class ProjectInformationDialogComponent implements OnInit {
     this.loadAllTasks();
   }
 
+  
+  addTask(task?: Task) {
+    if (!task) {
+      console.error('❌ Kein Task übergeben!');
+      return;
+    }
+  
+    if (!task.projectId && this.project) {
+      task.projectId = this.project.id;
+    }
+  
+    this.selectedTask = task;
+  
+    // 🛠 Speichere Task und Projekt in sessionStorage
+    sessionStorage.setItem('selectedTask', JSON.stringify(task));
+    sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
+  
+    console.log("✅ Add Task To local Cache:", JSON.stringify(task, null, 2));
+    console.log("✅ Navigating with state:", { project: this.project, task: task });
+  
+    this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
+  }
+  
+  
+
 
   loadAllTasks(): void {
     this.taskService.getAll().subscribe({
@@ -71,7 +99,7 @@ export class ProjectInformationDialogComponent implements OnInit {
         return;
       }
   
-      this.projectTasks = this.allTasks.filter(task => task.id == this.project?.id)
+      this.projectTasks = this.allTasks.filter(task => task.projectId == this.project?.id)
 
       if (this.projectTasks.length === 0) {
         console.warn(`⚠️ Warning: No tasks found for project ID ${this.project.id}`);
@@ -97,13 +125,10 @@ export class ProjectInformationDialogComponent implements OnInit {
     this.router.navigate(['/Projects']);
   }
 
-    addTask(task?: Task) {
-      console.log(`✅ Add ${task}`);
-      this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
-    }
     
 
   getAssignedTo(task: Task): string {
+    console.log(`✅ Assigned to: ${task}`);
     if (!task.assignedTo) {
       return 'Unassigned';
     }
