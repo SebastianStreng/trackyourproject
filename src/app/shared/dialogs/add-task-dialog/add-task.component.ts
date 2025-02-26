@@ -78,8 +78,6 @@ export class AddTaskComponent implements OnInit {
   }
   
   
-  
-  
   AddOrUpdateTask() {
     const taskData: Task = {
       id: this.task ? this.task.id : 0,
@@ -120,7 +118,7 @@ export class AddTaskComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/Projects']);
+        this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
   }
 }
 

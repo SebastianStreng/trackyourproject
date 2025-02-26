@@ -12,11 +12,11 @@
         <div class="right-info">
           <div>        <p-select 
             size="large"
-            [style]="{'width': '130px'}"
+            [style]="{'width': '160px'}"
             [options]="statusOptions" 
             [(ngModel)]="selectedStatus" 
             optionLabel="label" 
-            placeholder="Status" 
+            placeholder="{{selectedStatus}}" 
             class="w-full md:w-56" /></div>
         </div>
       </div>
@@ -47,14 +47,14 @@
         <p-datepicker [(ngModel)]="dueDate" [style]="{'width': '300px'}" size="large" placeholder="Pick a Due Date" dateFormat="dd.mm.yy" />
       </div>
 
-      <div class = "handleTask">
-        <p-button icon="pi pi-trash" aria-label="Save" />
-        <p-button icon="pi pi-check" aria-label="Save" />
-      </div>
+
 
       <div class="footer-container">
         <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
+        <button class="footer-button" (click)="goBack()"><span class="pi pi-trash"></span></button>
+        <button class="footer-button" (click)="goBack()"><span class="pi pi-check"></span></button>
         <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+
       </div>
 
 </app-dialog-card>

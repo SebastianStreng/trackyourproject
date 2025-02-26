@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared.module';
-import { Project, Task } from 'src/app/core/models/project';
+import { Project, Task, TaskStatus } from 'src/app/core/models/project';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
@@ -54,17 +54,20 @@ export class ProjectInformationDialogComponent implements OnInit {
   
   addTask(task?: Task) {
     if (!task) {
-      console.error('❌ Kein Task übergeben!');
-      return;
-    }
-  
-    if (!task.projectId && this.project) {
-      task.projectId = this.project.id;
+      console.warn('⚠️ Kein Task übergeben! Erstelle neuen Task...');
+      task = {
+        id: this.generateRandomId(),  // 0 oder eine temporäre ID für neue Tasks
+        projectId: this.project ? this.project.id : 0,
+        title: '',
+        description: '',
+        assignedTo: null,
+        dueDate: null,
+        status: TaskStatus.NotStarted
+      };
     }
   
     this.selectedTask = task;
   
-    // 🛠 Speichere Task und Projekt in sessionStorage
     sessionStorage.setItem('selectedTask', JSON.stringify(task));
     sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
   
@@ -73,7 +76,6 @@ export class ProjectInformationDialogComponent implements OnInit {
   
     this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
   }
-  
   
 
 
@@ -151,4 +153,10 @@ export class ProjectInformationDialogComponent implements OnInit {
     return task.status; 
 
   }
+
+  generateRandomId(): number {
+    return (Math.floor(1000 + Math.random() * 9000));
+  }
+  
+  
 }
