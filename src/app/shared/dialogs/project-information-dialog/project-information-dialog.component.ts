@@ -47,16 +47,20 @@ export class ProjectInformationDialogComponent implements OnInit {
       this.projectDescription = this.project.description;
     }
 
-    // ✅ Erst alle Tasks laden, danach filtern
     this.loadAllTasks();
   }
 
+  openChart(){
+    sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
+    sessionStorage.setItem('ProjectRelatedTasks', JSON.stringify(this.allTasks))
+    this.router.navigate(['/ShowChartDialog'], { state: { project: this.project, allTasks: this.allTasks } });
+  }
   
   addTask(task?: Task) {
     if (!task) {
       console.warn('⚠️ Kein Task übergeben! Erstelle neuen Task...');
       task = {
-        id: this.generateRandomId(),  // 0 oder eine temporäre ID für neue Tasks
+        id: this.generateRandomId(),  
         projectId: this.project ? this.project.id : 0,
         title: '',
         description: '',

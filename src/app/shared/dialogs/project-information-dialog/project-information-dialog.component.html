@@ -48,10 +48,17 @@
     </ng-template>
   </p-table>
 
+  <div class="chart-container">
+    <button class="chart-button" (click)="openChart()">
+        <span class="pi pi-chart-line"></span>
+    </button>
+</div>
+
   <div class="footer-container">
     <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
     <button class="footer-button" (click)="addTask()"><span class="pi pi-plus"></span></button>
     <button class="footer-button" (click)="addTask()"><span class="pi pi-user"></span></button>
-    <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+    <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>   
+
   </div>
 </app-dialog-card>

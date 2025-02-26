@@ -8,12 +8,12 @@ import { UserInformationDialogComponent } from './shared/dialogs/user-informatio
 import { DialogCardComponent } from "./shared/dialog-card/dialog-card.component";
 import { RegisterComponent } from './pages/login-page/register/register.component';
 import { AddTaskComponent } from './shared/dialogs/add-task-dialog/add-task.component';
+import { ShowChartDialogComponent } from "./shared/dialogs/show-chart-dialog/show-chart-dialog.component";
 
 
 @Component({
   imports: [
     RouterModule,
-
     LoginComponent,
     SelectionPageComponent,
     ProjectsComponent,
@@ -21,7 +21,8 @@ import { AddTaskComponent } from './shared/dialogs/add-task-dialog/add-task.comp
     UserInformationDialogComponent,
     DialogCardComponent,
     RegisterComponent,
-    AddTaskComponent
+    AddTaskComponent,
+    ShowChartDialogComponent
 ],
   selector: 'app-root',
   templateUrl: './app.component.html',

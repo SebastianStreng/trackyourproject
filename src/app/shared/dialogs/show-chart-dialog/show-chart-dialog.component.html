@@ -1,0 +1,18 @@
+<app-dialog-card>
+    <div class="header-container">
+      <h2 class="card-header">{{ project?.name }}</h2>
+      <button class="close-button" (click)="closeDialog()">&times;</button>
+    </div>
+  
+    <div class="chart-container">
+        <p-chart 
+          type="pie" 
+          [data]="data" 
+          [options]="options"
+          class="chart-container">
+        </p-chart>
+      </div>
+      
+  
+  </app-dialog-card>
+  

@@ -104,4 +104,24 @@
     border-radius: 5px;
     cursor: pointer;
   }
+
+  .chart-button {
+    display: flex;
+    justify-content: center;  /* Zentriert den Inhalt horizontal */
+    align-items: center;      /* Zentriert den Inhalt vertikal */
+    background-color: #2575fc;
+    color: white;
+    border: none;
+    padding: 10px 50px;  /* Erhöhte Breite */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 10px;
+
+}
+.chart-container {
+  display: flex;
+  justify-content: center;  /* Zentriert den Button horizontal */
+  margin-top: -20px;
+}
+
   
