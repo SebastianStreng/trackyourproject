@@ -1,0 +1,11 @@
+<app-dialog-card>
+    <app-dialog-card>
+
+        <div class="header-container">
+          <h2 class="card-header">Create new Project</h2>
+          <button class="close-button" (click)="closeDialog()">&times;</button>
+        </div>
+
+        <input pInputText [(ngModel)]="name" type="text" pSize="large" placeholder="Project Name" />
+
+</app-dialog-card>

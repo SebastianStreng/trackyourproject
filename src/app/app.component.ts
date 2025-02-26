@@ -9,6 +9,7 @@ import { DialogCardComponent } from "./shared/dialog-card/dialog-card.component"
 import { RegisterComponent } from './pages/login-page/register/register.component';
 import { AddTaskComponent } from './shared/dialogs/add-task-dialog/add-task.component';
 import { ShowChartDialogComponent } from "./shared/dialogs/show-chart-dialog/show-chart-dialog.component";
+import { CreateProjectDialogComponent } from './shared/dialogs/create-project-dialog/create-project-dialog.component';
 
 
 @Component({
@@ -22,7 +23,9 @@ import { ShowChartDialogComponent } from "./shared/dialogs/show-chart-dialog/sho
     DialogCardComponent,
     RegisterComponent,
     AddTaskComponent,
-    ShowChartDialogComponent
+    ShowChartDialogComponent,
+    CreateProjectDialogComponent
+
 ],
   selector: 'app-root',
   templateUrl: './app.component.html',
