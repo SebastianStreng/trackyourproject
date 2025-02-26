@@ -3,16 +3,26 @@
       <h2 class="card-header">{{ project?.name }}</h2>
       <button class="close-button" (click)="closeDialog()">&times;</button>
     </div>
+
+    <p-card [style]="{ width: '20rem', height: '20 rem', overflow: 'hidden' }">
+        <ng-template #header>
+            <div class="chart-container">
+                <p-chart 
+                  type="pie" 
+                  [data]="data" 
+                  [options]="options"
+                  class="chart-container">
+                </p-chart>
+              </div>
+        </ng-template>
+    </p-card>
   
-    <div class="chart-container">
-        <p-chart 
-          type="pie" 
-          [data]="data" 
-          [options]="options"
-          class="chart-container">
-        </p-chart>
+
+      <div class="footer-container">
+        <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
+        <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>   
+    
       </div>
       
-  
   </app-dialog-card>
   

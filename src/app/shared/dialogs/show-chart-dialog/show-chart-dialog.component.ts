@@ -5,11 +5,12 @@ import { ChartModule } from 'primeng/chart';
 import { DialogCardComponent } from "../../dialog-card/dialog-card.component";
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-show-chart-dialog',
   standalone: true,
-  imports: [CommonModule, ChartModule, DialogCardComponent],
+  imports: [CommonModule, ChartModule, DialogCardComponent, CardModule],
   templateUrl: './show-chart-dialog.component.html',
   styleUrl: './show-chart-dialog.component.css',
 })
@@ -113,4 +114,13 @@ export class ShowChartDialogComponent implements OnInit {
 
     return statusCounts;
   }
+
+
+  goHome() {
+    this.router.navigate(['/']);
+  }
+
+  goBack() {
+    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+}
 }
