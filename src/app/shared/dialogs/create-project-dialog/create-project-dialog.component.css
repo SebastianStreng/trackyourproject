@@ -24,3 +24,36 @@
     color: white;
     cursor: pointer;
   }
+
+  .full-width {
+    width: 100%; 
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.no-resize {
+    resize: none; 
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+    padding: 20px;
+}
+
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 20px;
+}
+
+.footer-button {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}

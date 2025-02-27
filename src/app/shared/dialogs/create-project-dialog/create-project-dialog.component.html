@@ -1,11 +1,43 @@
 <app-dialog-card>
-    <app-dialog-card>
+  <div class="header-container">
+      <h2 class="card-header">Create new Project</h2>
+      <button class="close-button" (click)="closeDialog()">&times;</button>
+  </div>
 
-        <div class="header-container">
-          <h2 class="card-header">Create new Project</h2>
-          <button class="close-button" (click)="closeDialog()">&times;</button>
-        </div>
+  <!-- Neuer Container für alle Inhalte außer dem Header -->
+  <div class="content-container">
+      <p>Created ID: {{ id }}</p>
 
-        <input pInputText [(ngModel)]="name" type="text" pSize="large" placeholder="Project Name" />
+      <input pInputText [(ngModel)]="name" type="text" pSize="large" placeholder="Project Name" class="full-width" />
+      <textarea pTextarea [(ngModel)]="description" pSize="large" placeholder="Description" rows="3" class="full-width no-resize"></textarea>
+      <p-datepicker [(ngModel)]="endDate" size="large" placeholder="Due Date" showIcon iconDisplay="input" class="full-width" />
 
+      <p-table 
+      [value]="members" 
+      [scrollable]="true" 
+      [style]="{ width: '100%', minHeight: '100px', maxHeight: '180px' }" 
+      scrollHeight="180px">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th>Name</th>
+                  <th>Check</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-member>
+              <tr>
+                  <td>{{ member.name }}</td>
+                  <td>
+                      <p-checkbox [(ngModel)]="member.selected" binary="true"></p-checkbox>
+                  </td>
+              </tr>
+          </ng-template>
+      </p-table>
+  </div>
+
+  <div class="footer-container">
+    <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
+    <button class="footer-button" (click)="delete()"><span class="pi pi-trash"></span></button>
+    <button class="footer-button" (click)="createNew()"><span class="pi pi-check"></span></button>
+    <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+  </div>
 </app-dialog-card>
