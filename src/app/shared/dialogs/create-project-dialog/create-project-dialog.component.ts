@@ -78,6 +78,8 @@ export class CreateProjectDialogComponent implements OnInit {
   }
 
   createNew(){
+    this.startDate = new Date (); 
+
     if (!this.name || !this.startDate) {
       console.error("❌ Name and start date are required!");
       return;
