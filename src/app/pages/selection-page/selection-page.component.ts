@@ -5,6 +5,7 @@ import { SmartphoneCardComponent } from "../../shared/smartphone-card/smartphone
 import { Router } from '@angular/router';
 import { ProjectService } from 'src/app/core/services/project-service/project-service';
 import { AuthenticationService } from 'src/app/core/services/auth-service/authentification-service';
+import { ProjectData } from 'src/app/core/TestData/ProjectData';
 
 @Component({
   selector: 'app-selection-page',
@@ -35,16 +36,25 @@ export class SelectionPageComponent {
     });
   }
   
+
+
   navigateToAllProjects() {
     this.projectService.getAll().subscribe({
       next: (projects: any[]) => {
+        if (!projects || projects.length === 0) {
+          console.warn('Keine Projekte aus der API, lade Testdaten.');
+          projects = ProjectData.getProjects();
+        }
         sessionStorage.setItem('projects', JSON.stringify(projects));
-        
         this.router.navigate(['/Projects']);
       },
       error: (err) => {
-        console.error('Error fetching projects:', err);
+        console.error('Fehler beim Abrufen der Projekte:', err);
+        //const projects = ProjectData.getProjects();
+        //sessionStorage.setItem('projects', JSON.stringify(projects));
+        this.router.navigate(['/Projects']);
       }
     });
   }
+  
 }

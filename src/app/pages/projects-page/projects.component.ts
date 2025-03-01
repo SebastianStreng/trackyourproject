@@ -5,6 +5,7 @@ import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Project } from 'src/app/core/models/project';
+import { ProjectData } from 'src/app/core/TestData/ProjectData';
 
 @Component({
   selector: 'app-your-project-page',
@@ -21,6 +22,7 @@ export class ProjectsComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
       this.projects = navigation.extras.state['projects'] || [];

@@ -12,6 +12,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProjectService } from 'src/app/core/services/project-service/project-service';
+import { MemberData } from 'src/app/core/TestData/MemberData';
 
 @Component({
   selector: 'app-create-project-dialog',
@@ -54,11 +55,12 @@ export class CreateProjectDialogComponent implements OnInit {
   loadProjectMembers(): void {
     this.projectMemberService.getAll().subscribe({
       next: (members) => {
-        this.members = members;
+        this.members = members && members.length > 0 ? members : MemberData.getMembers();
         console.log("✅ Project members loaded:", this.members);
       },
       error: (err) => {
         console.error("❌ Error loading project members:", err);
+        //this.members = MemberData.getMembers();
       }
     });
   }

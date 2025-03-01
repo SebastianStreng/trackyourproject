@@ -3,18 +3,25 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Project } from '../../models/project';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
-  baseUrl = 'http://localhost/api';
+  // baseUrl = 'http://trackyourproject.lovestoblog.com/api';
+baseUrl = 'http://localhost/api';
 
   constructor(private http: HttpClient) {}
 
+
   getAll() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
     return this.http
-      .get<{ data: Project[] }>(`${this.baseUrl}/projects`)
+      .get<{ data: Project[] }>(`${this.baseUrl}/projects`, { headers }) // Header hinzugefügt
       .pipe(
         tap((r) => console.log('Projects fetched:', r)),
         map((response) => response.data),
@@ -33,6 +40,13 @@ export class ProjectService {
         })
       );
   }
+  
+
+  // getAll() {
+  //   return this.http
+  //     .get<any>(`${this.baseUrl}/projects.php`)
+      
+  // }
 
   getById(id: number) {
     return this.http.get<Project>(`${this.baseUrl}/projects/${id}`).pipe(

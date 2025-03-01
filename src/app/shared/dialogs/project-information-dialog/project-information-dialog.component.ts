@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
 import { TaskService } from 'src/app/core/services/task-service/task-service';
+import { TaskData } from 'src/app/core/TestData/TaskData';
 
 @Component({
   selector: 'app-project-information-dialog',
@@ -86,14 +87,19 @@ export class ProjectInformationDialogComponent implements OnInit {
   loadAllTasks(): void {
     this.taskService.getAll().subscribe({
       next: (tasks) => {
-        this.allTasks = tasks;
+        this.allTasks = tasks && tasks.length > 0 ? tasks : TaskData.getTasks();
         console.log('✅ All tasks loaded:', this.allTasks);
         
         this.filterTasksByProjectId();
       },
-      error: (err) => console.error('❌ Error fetching all tasks:', err),
+      error: (err) => {
+        console.error('❌ Error fetching all tasks:', err);
+        //this.allTasks = TaskData.getTasks();
+        //this.filterTasksByProjectId();
+      },
     });
   }
+  
   
 
   filterTasksByProjectId(): void {

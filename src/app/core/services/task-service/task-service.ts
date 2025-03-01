@@ -8,6 +8,7 @@ import { Task, TaskStatus } from '../../models/project';
   providedIn: 'root',
 })
 export class TaskService {
+  // baseUrl = 'http://trackyourproject.lovestoblog.com/api'; //does not work due CORS issues
   baseUrl = 'http://localhost/api';
 
   constructor(private http: HttpClient) {}
@@ -22,7 +23,7 @@ export class TaskService {
       map((tasks) =>
         tasks.map((task) => ({
           id: task.id,
-          projectId: task.projectId ?? null,  // 🛠 Hier sicherstellen, dass projectId vorhanden ist!
+          projectId: task.projectId ?? null,  
           title: task.title,
           description: task.description || '',
           assignedTo: task.assignedTo ?? null,
@@ -39,9 +40,6 @@ export class TaskService {
   }
   
 
-  /**
-   * ✅ Holt alle Tasks und filtert sie nach `projectId`
-   */
   getTasksByProjectId(projectId: number): Observable<Task[]> {
     return this.getAll().pipe(
       map((tasks) => tasks.filter((task) => task.projectId === projectId)),
@@ -53,9 +51,7 @@ export class TaskService {
     );
   }
 
-  /**
-   * ✅ Holt eine einzelne Task nach ID
-   */
+
   getById(id: number): Observable<Task> {
     return this.http.get<Task>(`${this.baseUrl}/tasks/${id}`).pipe(
       tap((response) => console.log(`Task ${id} fetched:`, response)),
@@ -66,9 +62,7 @@ export class TaskService {
     );
   }
 
-  /**
-   * ✅ Erstellt eine neue Task
-   */
+
   create(task: Task): Observable<Task> {
     return this.http.post<Task>(`${this.baseUrl}/tasks`, task).pipe(
       tap((res) => console.log('Task created:', res)),
@@ -79,9 +73,7 @@ export class TaskService {
     );
   }
 
-  /**
-   * ✅ Aktualisiert eine bestehende Task
-   */
+
   update(task: Task): Observable<Task> {
     return this.http.put<Task>(`${this.baseUrl}/tasks/${task.id}`, task).pipe(
       tap((res) => console.log('Task updated:', res)),
@@ -92,9 +84,7 @@ export class TaskService {
     );
   }
 
-  /**
-   * ✅ Löscht eine Task
-   */
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/tasks/${id}`).pipe(
       tap(() => console.log(`Task ${id} deleted`)),

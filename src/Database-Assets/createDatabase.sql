@@ -51,7 +51,15 @@ INSERT INTO projects (name, description, start_date, end_date) VALUES
 INSERT INTO project_members (name, email, password) VALUES 
 ('Alice', 'alice@example.com', 'hashed_password_1'), 
 ('Bob', 'bob@example.com', 'hashed_password_2'), 
-('Charlie', 'charlie@example.com', 'hashed_password_3');
+('Charlie', 'charlie@example.com', 'hashed_password_3'), 
+('David', 'david@example.com', 'hashed_password_4'), 
+('Emma', 'emma@example.com', 'hashed_password_5'), 
+('Frank', 'frank@example.com', 'hashed_password_6'), 
+('Grace', 'grace@example.com', 'hashed_password_7'), 
+('Henry', 'henry@example.com', 'hashed_password_8'), 
+('Ivy', 'ivy@example.com', 'hashed_password_9'), 
+('Jack', 'jack@example.com', 'hashed_password_10');
+
 
 INSERT INTO project_member_links (project_id, member_id) VALUES 
 (1, 1), 
