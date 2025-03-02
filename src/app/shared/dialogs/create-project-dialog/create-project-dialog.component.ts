@@ -100,7 +100,7 @@ export class CreateProjectDialogComponent implements OnInit {
     this.projectService.create(project).subscribe({
       next: (createdProject) => {
         console.log("✅ Project successfully created:", createdProject);
-        this.router.navigate(['/Projects']); 
+        this.router.navigate(['/Selection']); 
       },
       error: (err) => {
         console.error("❌ Error creating project:", err);

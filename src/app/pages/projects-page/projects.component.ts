@@ -33,6 +33,10 @@ export class ProjectsComponent implements OnInit {
     }
   }
 
+  AssignToNewProject(){
+    this.router.navigate(['/AssignToNewProject'], { state: { projects: this.projects } });
+  }
+
   show(project: Project) {
     this. selectedProject = project; 
     sessionStorage.setItem('selectedProject', JSON.stringify(project)); 

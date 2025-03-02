@@ -10,6 +10,8 @@ import { RegisterComponent } from './pages/login-page/register/register.componen
 import { AddTaskComponent } from './shared/dialogs/add-task-dialog/add-task.component';
 import { ShowChartDialogComponent } from "./shared/dialogs/show-chart-dialog/show-chart-dialog.component";
 import { CreateProjectDialogComponent } from './shared/dialogs/create-project-dialog/create-project-dialog.component';
+import { AssignToNewProjectComponent } from './shared/dialogs/Assign-to-new-project-dialog/assign-to-new-project.component';
+import { AssignUserToProjectComponent } from './shared/dialogs/assign-user-to-new-project-dialog/assign-user-to-project.component';
 
 
 @Component({
@@ -24,7 +26,9 @@ import { CreateProjectDialogComponent } from './shared/dialogs/create-project-di
     RegisterComponent,
     AddTaskComponent,
     ShowChartDialogComponent,
-    CreateProjectDialogComponent
+    CreateProjectDialogComponent,
+    AssignToNewProjectComponent,
+    AssignUserToProjectComponent
 
 ],
   selector: 'app-root',

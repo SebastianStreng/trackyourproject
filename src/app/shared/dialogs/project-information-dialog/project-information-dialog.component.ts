@@ -81,6 +81,11 @@ export class ProjectInformationDialogComponent implements OnInit {
   
     this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
   }
+
+  AddUserToProject (){
+    sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
+    this.router.navigate(['/AddUserToProject'], { state: { project: this.project} });
+  }
   
 
 

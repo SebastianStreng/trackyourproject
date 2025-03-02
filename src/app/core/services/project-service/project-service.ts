@@ -20,7 +20,7 @@ baseUrl = 'http://localhost/api';
     });
   
     return this.http
-      .get<{ data: Project[] }>(`${this.baseUrl}/projects`, { headers }) // Header hinzugefügt
+      .get<{ data: Project[] }>(`${this.baseUrl}/projects`, { headers }) 
       .pipe(
         tap((r) => console.log('Projects fetched:', r)),
         map((response) => response.data),
