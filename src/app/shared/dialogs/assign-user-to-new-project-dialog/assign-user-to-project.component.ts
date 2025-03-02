@@ -48,12 +48,11 @@ export class AssignUserToProjectComponent implements OnInit {
   GetProjectMemberLinks() {
     this.projectMemberLinkService.getAll().subscribe({
       next: (links) => {
-        this.allMemberLinks = links; // Store all links
+        this.allMemberLinks = links; 
         console.log('All project-member links fetched:', this.allMemberLinks);
-  
-        // Ensure the project exists before filtering
+
         if (this.project && this.project.id) {
-          this.ConnectUsersToProject(); // ✅ Call after links are fetched
+          this.ConnectUsersToProject(); 
         }
       },
       error: (err) => {

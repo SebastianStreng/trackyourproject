@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
-import { ProjectMember } from '../../models/project';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +11,8 @@ export class ProjectMemberLinkService {
 
   constructor(private http: HttpClient) {}
 
-
-  getAll(): Observable<{ projectId: number, memberId: number }[]> {
+  // ✅ Retrieve all project-member links
+  getAll(): Observable<{ projectId: number; memberId: number }[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.http.get<{ data: any[] }>(`${this.baseUrl}/project_member_links`, { headers }).pipe(
@@ -32,7 +31,7 @@ export class ProjectMemberLinkService {
     );
   }
 
-
+  // ✅ Create a new project-member link
   create(projectId: number, memberId: number): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const requestData = { project_id: projectId, member_id: memberId };
@@ -43,15 +42,22 @@ export class ProjectMemberLinkService {
       tap((res: any) => console.log('✅ Project-Member Link created:', res)),
       catchError((error: HttpErrorResponse) => {
         console.error('❌ Error creating project-member link:', error);
+        return throwError(() => new Error(error.error?.error || 'Unknown error'));
+      })
+    );
+  }
 
-        if (error.status === 0) {
-          console.error('🌍 Network error – backend might be down or CORS issue');
-        } else if (error.status === 400) {
-          console.error('⚠️ Bad Request – possible validation issue:', error.error);
-        } else if (error.status === 500) {
-          console.error('🔥 Server Error – check backend logs for more details');
-        }
+  // ✅ Update project-member links for a project
+  update(projectId: number, memberIds: number[]): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const requestData = { project_id: projectId, member_ids: memberIds };
 
+    console.log('📤 Sending update request:', requestData);
+
+    return this.http.put(`${this.baseUrl}/project_member_links`, requestData, { headers }).pipe(
+      tap((res: any) => console.log('✅ Project-Member Links updated:', res)),
+      catchError((error: HttpErrorResponse) => {
+        console.error('❌ Error updating project-member links:', error);
         return throwError(() => new Error(error.error?.error || 'Unknown error'));
       })
     );
