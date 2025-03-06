@@ -21,10 +21,11 @@ export interface Project {
     projectId: number;  
     title: string; 
     description?: string; 
-    assignedTo?: string | ProjectMember | null;
-    dueDate?: Date | null;  // ✅ Null explizit erlaubt
+    assignedTo?: number | null;  // ✅ Null explizit erlaubt
+    dueDate?: Date | null;  
     status: TaskStatus; 
 }
+
 
 
   export enum TaskStatus {

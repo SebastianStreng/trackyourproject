@@ -25,7 +25,7 @@ export class AddTaskComponent implements OnInit {
   project!: Project; 
   task: Task | null = null;
   title? : string;
-  assignedTo: string | ProjectMember | null = null;
+  assignedTo!: number; 
   members: ProjectMember[] = [];
   description = '';
   dueDate= '';
@@ -79,7 +79,7 @@ export class AddTaskComponent implements OnInit {
 
     this.title = this.task?.title ?? '';  
     this.description = this.task?.description ?? '';
-    this.assignedTo = this.task?.assignedTo ?? null;
+    this.assignedTo = this.task?.assignedTo ?? 0;  
     this.dueDate = this.task?.dueDate ? new Date(this.task.dueDate).toISOString().substring(0, 10) : '';
     this.selectedStatus = this.task?.status ?? TaskStatus.NotStarted;
   
@@ -87,7 +87,6 @@ export class AddTaskComponent implements OnInit {
 
     this.GetAllMembers();
     this.GetProjectMemberLinks(); 
-
   }
 
 
@@ -133,13 +132,14 @@ export class AddTaskComponent implements OnInit {
   AddOrUpdateTask() {
     const taskData: Task = {
       id: this.task ? this.task.id : 0,
-      projectId: this.project ? this.project.id : 0, 
+      projectId: this.project?.id ?? '',  // Ensure it's not 0
       title: this.title ?? '',  
       description: this.description ?? '',
-      assignedTo: this.assignedTo ?? null,
+      assignedTo: this.assignedTo ?? 0,  // IS not a number !!! needs to
       dueDate: this.dueDate ? new Date(this.dueDate) : null,
       status: this.selectedStatus ?? TaskStatus.NotStarted,
     };
+    
   
   
     if (this.alreadyExists) {

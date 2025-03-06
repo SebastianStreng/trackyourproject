@@ -154,9 +154,9 @@ export class ProjectInformationDialogComponent implements OnInit {
       return task.assignedTo;
     }
   
-    if ('name' in task.assignedTo) {
-      return task.assignedTo.name;
-    }
+    // if ('name' in task.assignedTo) {
+    //   return task.assignedTo.name;
+    // }
   
     return 'Unknown';
   }
