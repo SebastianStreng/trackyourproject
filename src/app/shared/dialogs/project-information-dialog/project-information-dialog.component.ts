@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared.module';
-import { Project, Task, TaskStatus } from 'src/app/core/models/project';
+import { Project, ProjectMember, Task, TaskStatus } from 'src/app/core/models/project';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
 import { TaskService } from 'src/app/core/services/task-service/task-service';
 import { TaskData } from 'src/app/core/TestData/TaskData';
+import { ProjectMemberService } from 'src/app/core/services/projectmember-service/projectmember-service';
+import { ProjectMemberLinkService } from 'src/app/core/services/project-member-link-service/project-member-link-service';
 
 @Component({
   selector: 'app-project-information-dialog',
@@ -16,15 +18,23 @@ import { TaskData } from 'src/app/core/TestData/TaskData';
   styleUrls: ['./project-information-dialog.component.css'],
 })
 export class ProjectInformationDialogComponent implements OnInit {
-  project: Project | null = null;
+  project!: Project;
   projectDescription = '';
   allTasks: Task[] = [];  
   projectTasks: Task[] = [];  
   selectedTask?: Task;
+  members: ProjectMember[] = [];
+  users: ProjectMember[] = [];
+  allMemberLinks: { projectId: number; memberId: number }[] = []; 
+  projectMemberLinks: { projectId: number; memberId: number }[] = []; 
 
 
 
-  constructor(private router: Router, private taskService: TaskService) {}
+  constructor(
+    private router: Router, 
+    private taskService: TaskService, 
+    private projectMemberService: ProjectMemberService,
+    private projectMemberLinkService: ProjectMemberLinkService) {}
 
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
@@ -49,12 +59,52 @@ export class ProjectInformationDialogComponent implements OnInit {
     }
 
     this.loadAllTasks();
+    this.GetAllMembers();
+    this.GetProjectMemberLinks();
   }
 
   openChart(){
     sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
     sessionStorage.setItem('ProjectRelatedTasks', JSON.stringify(this.allTasks))
     this.router.navigate(['/ShowChartDialog'], { state: { project: this.project, allTasks: this.allTasks } });
+  }
+
+  GetAllMembers() {
+    this.projectMemberService.getAll().subscribe({
+      next: (members) => {
+        this.users = members;
+        console.log('All members loaded:', this.users);
+      },
+      error: (err) => {
+        console.error('Error fetching members:', err);
+      }
+    });
+  }
+
+  GetProjectMemberLinks() {
+    this.projectMemberLinkService.getAll().subscribe({
+      next: (links) => {
+        this.allMemberLinks = links; 
+        console.log('All project-member links fetched:', this.allMemberLinks);
+
+        if (this.project && this.project.id) {
+          this.ConnectUsersToProject(); 
+          const memberIDs = this.projectMemberLinks.map(link => link.memberId);
+          console.log('Member IDS: ', memberIDs)
+          this.members = this.users.filter(user => memberIDs.includes(Number(user.id)))
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching project-member links:', err);
+      }
+    });
+  }
+
+  ConnectUsersToProject() {
+    this.projectMemberLinks = this.allMemberLinks.filter(link => link.projectId === this.project.id);
+    console.log('Current Project:', this.project);
+    console.log('Connected Project Member Links:', this.projectMemberLinks);
+  
   }
   
   addTask(task?: Task) {
@@ -145,21 +195,26 @@ export class ProjectInformationDialogComponent implements OnInit {
     
 
   getAssignedTo(task: Task): string {
-    console.log(`✅ Assigned to: ${task}`);
+    console.log(`✅ Assigned to (raw value):`, task.assignedTo);
+  
     if (!task.assignedTo) {
       return 'Unassigned';
     }
   
-    if (typeof task.assignedTo === 'string') {
-      return task.assignedTo;
+    // Falls assignedTo eine ID (number) ist, suche den passenden Member
+    if (typeof task.assignedTo === 'number') {
+      const member = this.members.find(m => m.id === task.assignedTo);
+      if (member) {
+        return member.name;
+      } else {
+        console.warn(`⚠️ Kein Mitglied mit ID ${task.assignedTo} gefunden!`);
+        return `User ID: ${task.assignedTo}`;
+      }
     }
-  
-    // if ('name' in task.assignedTo) {
-    //   return task.assignedTo.name;
-    // }
   
     return 'Unknown';
   }
+  
 
   getTaskStatus(task: Task){
     if(!task.status) {
