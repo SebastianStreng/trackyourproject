@@ -44,6 +44,27 @@ export class AssignUserToProjectComponent implements OnInit {
     this.GetProjectMemberLinks(); 
   }
 
+  updateUsers() {
+    if (!this.project || !this.project.id) {
+      console.error('❌ No Project found!');
+      return;
+    }
+  
+    const memberIds = this.selectedUsers.map(user => user.id);
+  
+    console.log(`🔄 new Users: ${this.project.id}:`, memberIds);
+  
+    this.projectMemberLinkService.update(this.project.id, memberIds).subscribe({
+      next: (response) => {
+        console.log('✅ Add Users succefully:', response);
+      },
+      error: (err) => {
+        console.error('❌ ERROR - could not update users :', err);
+      }
+    });
+  }
+  
+
 
   GetProjectMemberLinks() {
     this.projectMemberLinkService.getAll().subscribe({

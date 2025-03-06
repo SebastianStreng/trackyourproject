@@ -10,6 +10,8 @@ import { Task } from 'src/app/core/models/project';
 import { TextareaModule } from 'primeng/textarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ProjectMemberService } from 'src/app/core/services/projectmember-service/projectmember-service';
+import { ProjectMemberLinkService } from 'src/app/core/services/project-member-link-service/project-member-link-service';
 
 @Component({
   selector: 'app-add-task',
@@ -20,7 +22,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 })
 export class AddTaskComponent implements OnInit {
 
-  project: Project | null = null;
+  project!: Project; 
   task: Task | null = null;
   title? : string;
   assignedTo: string | ProjectMember | null = null;
@@ -30,6 +32,9 @@ export class AddTaskComponent implements OnInit {
   status = TaskStatus;
   selectedStatus: TaskStatus | null = null;
   alreadyExists = false; 
+  users: ProjectMember [] = []
+  allMemberLinks: { projectId: number; memberId: number }[] = []; 
+  projectMemberLinks: { projectId: number; memberId: number }[] = []; 
 
   statusOptions = [
     { label: 'Not Started', value: TaskStatus.NotStarted },
@@ -38,7 +43,11 @@ export class AddTaskComponent implements OnInit {
     { label: 'Blocked', value: TaskStatus.Blocked }
   ];
   
-  constructor(private router: Router, private taskService: TaskService) {}
+  constructor(
+    private router: Router, 
+    private taskService: TaskService, 
+    private projectMemberService: ProjectMemberService,
+    private projectMemberLinkService: ProjectMemberLinkService) {}
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
   
@@ -75,6 +84,49 @@ export class AddTaskComponent implements OnInit {
     this.selectedStatus = this.task?.status ?? TaskStatus.NotStarted;
   
     console.log("✅ Final Task state in ngOnInit:", this.task);
+
+    this.GetAllMembers();
+    this.GetProjectMemberLinks(); 
+
+  }
+
+
+  GetProjectMemberLinks() {
+    this.projectMemberLinkService.getAll().subscribe({
+      next: (links) => {
+        this.allMemberLinks = links; 
+        console.log('All project-member links fetched:', this.allMemberLinks);
+
+        if (this.project && this.project.id) {
+          this.ConnectUsersToProject(); 
+          const memberIDs = this.projectMemberLinks.map(link => link.memberId);
+          console.log('Member IDS: ', memberIDs)
+          this.members = this.users.filter(user => memberIDs.includes(Number(user.id)))
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching project-member links:', err);
+      }
+    });
+  }
+
+  GetAllMembers() {
+    this.projectMemberService.getAll().subscribe({
+      next: (members) => {
+        this.users = members;
+        console.log('All members loaded:', this.users);
+      },
+      error: (err) => {
+        console.error('Error fetching members:', err);
+      }
+    });
+  }
+
+  ConnectUsersToProject() {
+    this.projectMemberLinks = this.allMemberLinks.filter(link => link.projectId === this.project.id);
+    console.log('Current Project:', this.project);
+    console.log('Connected Project Member Links:', this.projectMemberLinks);
+  
   }
   
   
@@ -91,7 +143,7 @@ export class AddTaskComponent implements OnInit {
   
   
     if (this.alreadyExists) {
-      this.taskService.update(taskData).subscribe({
+      this.taskService.updateTask(taskData).subscribe({
         next: (updatedTask) => {
           console.log('Task updated:', updatedTask);
           this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
@@ -99,7 +151,7 @@ export class AddTaskComponent implements OnInit {
         error: (err) => console.error('Error updating task:', err),
       });
     } else {
-      this.taskService.create(taskData).subscribe({
+      this.taskService.createTask(taskData).subscribe({
         next: (createdTask) => {
           console.log('Task created:', createdTask);
           this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });

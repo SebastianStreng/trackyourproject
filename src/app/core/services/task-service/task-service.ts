@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { Task, TaskStatus } from '../../models/project';
@@ -8,7 +8,7 @@ import { Task, TaskStatus } from '../../models/project';
   providedIn: 'root',
 })
 export class TaskService {
-  // baseUrl = 'http://trackyourproject.lovestoblog.com/api'; //does not work due CORS issues
+  // baseUrl = 'http://trackyourproject.lovestoblog.com/api'; //does not work due to CORS issues
   baseUrl = 'http://localhost/api';
 
   constructor(private http: HttpClient) {}
@@ -38,53 +38,40 @@ export class TaskService {
       })
     );
   }
-  
 
-  getTasksByProjectId(projectId: number): Observable<Task[]> {
-    return this.getAll().pipe(
-      map((tasks) => tasks.filter((task) => task.projectId === projectId)),
-      tap((filteredTasks) => console.log(`Tasks for project ${projectId} filtered:`, filteredTasks)),
-      catchError((error: any) => {
-        console.error(`Error fetching tasks for project ${projectId}:`, error);
-        return throwError(() => new Error(`Error fetching tasks for project ${projectId}`));
-      })
-    );
-  }
+  /**
+   * ✅ Erstellt eine neue Task
+   */
+  createTask(task: Partial<Task>): Observable<Task> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-
-  getById(id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.baseUrl}/tasks/${id}`).pipe(
-      tap((response) => console.log(`Task ${id} fetched:`, response)),
+    return this.http.post<Task>(`${this.baseUrl}/tasks`, task, { headers }).pipe(
+      tap((newTask) => console.log('✅ Task created:', newTask)),
       catchError((error) => {
-        console.error(`Error fetching task ${id}:`, error);
-        return throwError(() => new Error(`Error fetching task ${id}`));
-      })
-    );
-  }
-
-
-  create(task: Task): Observable<Task> {
-    return this.http.post<Task>(`${this.baseUrl}/tasks`, task).pipe(
-      tap((res) => console.log('Task created:', res)),
-      catchError((error) => {
-        console.error('Error creating task:', error);
+        console.error('❌ Error creating task:', error);
         return throwError(() => new Error('Error creating task'));
       })
     );
   }
 
+  /**
+   * ✅ Aktualisiert eine bestehende Task
+   */
+  updateTask(task: Task): Observable<Task> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  update(task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.baseUrl}/tasks/${task.id}`, task).pipe(
-      tap((res) => console.log('Task updated:', res)),
+    return this.http.put<Task>(`${this.baseUrl}/tasks`, task, { headers }).pipe(
+      tap((updatedTask) => console.log('✅ Task updated:', updatedTask)),
       catchError((error) => {
-        console.error('Error updating task:', error);
+        console.error('❌ Error updating task:', error);
         return throwError(() => new Error('Error updating task'));
       })
     );
   }
 
-
+  /**
+   * ✅ Löscht eine Task
+   */
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/tasks/${id}`).pipe(
       tap(() => console.log(`Task ${id} deleted`)),
