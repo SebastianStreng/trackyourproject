@@ -1,0 +1,26 @@
+<app-smartphone-card>
+    <div class="container">
+      <input pInputText [(ngModel)]="firstName" type="text" pSize="large" placeholder="First Name" class="input-field"/>
+  
+      <input pInputText [(ngModel)]="lastName" type="text" pSize="large" placeholder="Last Name" class="input-field"/>
+  
+      <input pInputText [(ngModel)]="email" type="text" pSize="large" placeholder="E-mail" class="input-field"/>
+  
+      <input pInputText [(ngModel)]="password" type="password" pSize="large" placeholder="Password" class="input-field"/>
+  
+      <input pInputText [(ngModel)]="passwordCheck" type="password" pSize="large" placeholder="Repeat Password" class="input-field"/>
+  
+      <!-- Fehlermeldungen anzeigen -->
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+  
+      <!-- Erfolgsmeldung -->
+      <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+    </div>
+  
+    <div class="footer-container">
+      <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
+      <button class="footer-button" (click)="register()"><span class="pi pi-check"></span></button>
+      <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+    </div>
+  </app-smartphone-card>
+  

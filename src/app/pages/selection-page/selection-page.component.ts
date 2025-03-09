@@ -22,12 +22,11 @@ export class SelectionPageComponent {
   
     this.projectService.getAll().subscribe({
       next: (projects: any[]) => {
-        const userProjects = projects.filter(project => 
-          project.members && project.members.some((member: { id: number }) => member.id === currentUser.id)
+        const userProjects = projects.filter(project =>
+          project.members && project.members.some((member: { id: number }) => member.id === currentUser?.id)
         );
   
         sessionStorage.setItem('projects', JSON.stringify(userProjects));
-
         this.router.navigate(['/Projects']);
       },
       error: (err) => {
@@ -35,6 +34,7 @@ export class SelectionPageComponent {
       }
     });
   }
+  
   
 
 

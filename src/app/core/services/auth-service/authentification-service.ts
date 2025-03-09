@@ -11,65 +11,54 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthenticationService {
   private baseUrl = 'http://localhost/api';
-  private loggedInSubject = new BehaviorSubject<boolean>(false);
-  private currentProjectMemberSubject = new BehaviorSubject<any>(null);
+  private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private currentProjectMemberSubject = new BehaviorSubject<ProjectMember | null>(null);
 
   public loggedIn = this.loggedInSubject.asObservable();
-  public loggedInProjectMember!: ProjectMember;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this.loadUserFromToken(); // Falls schon ein Token existiert, Nutzer laden
+  }
 
-  login(ProjectMembername: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, { ProjectMembername, password }).pipe(
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login.php`, { email, password }).pipe(
       tap((response: any) => {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
-          this.loggedInProjectMember = response.ProjectMember;
           this.loggedInSubject.next(true);
-          this.updateCurrentProjectMember();
+          this.loadUserFromToken();
         }
       }),
       catchError((error) => {
         console.error('Login failed:', error);
-
-        console.log('Server response:', error.error);
-
         throw error;
       })
     );
   }
 
-  getCurrentProjectMember(): ProjectMember {
+  private loadUserFromToken(): void {
     const token = localStorage.getItem('token');
-    try {
-      if (token) {
+    if (token) {
+      try {
         const decodedToken: any = jwtDecode(token);
-        return this.mapDecodedTokenToProjectMember(decodedToken);
+        const user: ProjectMember = this.mapDecodedTokenToProjectMember(decodedToken);
+        this.currentProjectMemberSubject.next(user);
+      } catch (error) {
+        console.error('Failed to decode token:', error);
       }
-    } catch (error) {
-      console.error('Failed to decode token:', error);
     }
-    return this.getDefaultProjectMember();
+  }
+
+  getCurrentProjectMember(): ProjectMember | null {
+    return this.currentProjectMemberSubject.value;
   }
 
   private mapDecodedTokenToProjectMember(decodedToken: any): ProjectMember {
-    if (decodedToken) {
-      return {
-        id: +decodedToken.ProjectMember_id,
-        name: decodedToken.ProjectMembername,
-        email: decodedToken.ProjectMember_mail,
-        password: '', // Passwort wird nicht im Token gespeichert
-      };
-    }
-    return this.getDefaultProjectMember();
-  }
-
-  private getDefaultProjectMember(): ProjectMember {
     return {
-      id: 0,
-      name: 'Guest',
-      password: '',
-      email: '',
+      id: +decodedToken.id,
+      name: decodedToken.name,
+      email: decodedToken.email,
+      password: '', // Das Passwort wird nicht im Token gespeichert
     };
   }
 
@@ -77,26 +66,14 @@ export class AuthenticationService {
     localStorage.removeItem('token');
     this.loggedInSubject.next(false);
     this.currentProjectMemberSubject.next(null);
+    this.router.navigate(['/Login']);
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return this.hasToken();
   }
 
-  private updateCurrentProjectMember(): void {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      this.http
-        .get(`${this.baseUrl}/ProjectMember`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .subscribe(
-          (ProjectMember: any) => this.currentProjectMemberSubject.next(ProjectMember),
-          (error) => console.error('Failed to get current ProjectMember:', error)
-        );
-    }
+  private hasToken(): boolean {
+    return !!localStorage.getItem('token');
   }
 }

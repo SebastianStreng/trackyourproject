@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ProjectMember } from '../../models/project';
 
 @Injectable({
@@ -35,15 +35,15 @@ export class ProjectMemberService {
     );
   }
 
-  store(member: ProjectMember) {
-    return this.http.post(`${this.baseUrl}/store_project_member`, { data: member }).pipe(
+  store(member: ProjectMember): Observable<ProjectMember> {
+    return this.http.post<ProjectMember>(`${this.baseUrl}/project_members`, { data: member }).pipe(
       tap((res: any) => {
-        console.log('Response from store:', res);
+        console.log('User registered successfully:', res);
         return res['data'];
       }),
       catchError((error) => {
-        console.error('Error in store:', error);
-        return throwError(error);
+        console.error('Error while registering:', error);
+        throw error;
       })
     );
   }

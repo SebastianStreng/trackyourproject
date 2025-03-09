@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zentriert die Inputs */
+    justify-content: center; /* Falls die Höhe des Containers groß ist */
+    width: 100%;
+    padding: 20px;
+    margin-top: 80px;
+}
+
+.input-field {
+    width: 80%; /* Anpassbare Breite */
+    max-width: 400px; /* Damit es nicht zu breit wird */
+    margin-bottom: 15px; /* Abstand zwischen den Feldern */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Damit Padding nicht die Breite beeinflusst */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin-top: 110px;
+}
+
+.footer-button {
+    background-color: #2575fc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
