@@ -18,21 +18,27 @@ export class SelectionPageComponent {
   constructor(private router: Router, private projectService: ProjectService, private authService: AuthenticationService) {}
 
   navigateToYourProjects() {
-    const currentUser = this.authService.getCurrentProjectMember();
-  
-    this.projectService.getAll().subscribe({
-      next: (projects: any[]) => {
-        const userProjects = projects.filter(project =>
-          project.members && project.members.some((member: { id: number }) => member.id === currentUser?.id)
-        );
-  
-        sessionStorage.setItem('projects', JSON.stringify(userProjects));
-        this.router.navigate(['/Projects']);
-      },
-      error: (err) => {
-        console.error('Error fetching projects:', err);
+    this.authService.getCurrentProjectMember().subscribe(currentUser => {
+      if (currentUser) {
+        this.projectService.getAll().subscribe({
+          next: (projects: any[]) => {
+            const userProjects = projects.filter(project =>
+              project.members && project.members.some((member: { id: number }) => member.id === currentUser.id)
+            );
+    
+            sessionStorage.setItem('projects', JSON.stringify(userProjects));
+            this.router.navigate(['/Projects']);
+          },
+          error: (err) => {
+            console.error('Error fetching projects:', err);
+          }
+        });
+      } else {
+        console.warn('No user found, redirecting to login.');
+        this.router.navigate(['/Login']);
       }
     });
+    
   }
   
   
