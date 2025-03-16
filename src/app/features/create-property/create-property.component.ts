@@ -16,4 +16,8 @@ export class CreatePropertyComponent {
   createProject (){
     this.router.navigate(['/CreateNewProject']); 
   }
+
+  logOut(){
+    this.router.navigate(['/Login']); 
+  }
 }

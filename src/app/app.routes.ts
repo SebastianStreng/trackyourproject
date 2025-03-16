@@ -8,6 +8,7 @@ import { CreateProjectDialogComponent } from './shared/dialogs/create-project-di
 import { AssignToNewProjectComponent } from './shared/dialogs/Assign-to-new-project-dialog/assign-to-new-project.component';
 import { AssignUserToProjectComponent } from './shared/dialogs/assign-user-to-new-project-dialog/assign-user-to-project.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { RegisterPageComponent } from './pages/register-page/register-page.component';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'Selection', pathMatch: 'full' }, // Standardroute
@@ -19,6 +20,7 @@ export const appRoutes: Route[] = [
   { path: 'CreateNewProject', component: CreateProjectDialogComponent},
   { path: 'AssignToNewProject', component: AssignToNewProjectComponent},
   { path: 'AddUserToProject', component: AssignUserToProjectComponent},
-   { path: 'Login', component: LoginPageComponent},
+  { path: 'Login', component: LoginPageComponent},
+  { path: 'Register', component: RegisterPageComponent},
   
 ];

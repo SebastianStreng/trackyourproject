@@ -29,7 +29,7 @@ export class LoginPageComponent {
     this.authService.login(this.email, this.password).subscribe(
       () => {
         console.log('Login successful!');
-        this.router.navigate(['/dashboard']); 
+        this.router.navigate(['/Selection']); 
       },
       (error) => {
         console.error('Login failed:', error);

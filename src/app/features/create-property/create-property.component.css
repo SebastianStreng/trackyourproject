@@ -8,14 +8,15 @@
     color: #333; /* Textfarbe */
 }
 
-/* From Uiverse.io by gagan-gv */ 
 .button-container {
-    display: flex; /* Buttons nebeneinander anordnen */
-    gap: 10px; /* Abstand zwischen den Buttons */
-    justify-content: center; /* Zentriert die Buttons horizontal */
-    align-items: center; /* Zentriert die Buttons vertikal */
-    margin: 70px 0; /* Abstand vom Container zu anderen Elementen */
-  }
+  display: flex;
+  flex-direction: column; /* Neu: Buttons untereinander anordnen */
+  gap: 10px; /* Abstand zwischen den Buttons */
+  justify-content: center; /* Zentriert die Buttons horizontal */
+  align-items: center; /* Zentriert die Buttons vertikal */
+  margin: 70px 0; /* Abstand vom Container zu anderen Elementen */
+}
+
 
 .btn {
     position: relative;
