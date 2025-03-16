@@ -71,7 +71,7 @@ export class AssignToNewProjectComponent implements OnInit {
     const projectIds = this.selectedProjects.map(project => project.id);
   
     if (projectIds.length === 0) {
-      console.warn('⚠️ No projects selected. Removing all project-member links for user.');
+      console.warn(`⚠️ No projects selected. Removing all project-member links for user ${this.currentUser.id}.`);
     }
   
     console.log(`🔄 Updating project-member links for user ${this.currentUser.id} with projects:`, projectIds);
@@ -87,14 +87,14 @@ export class AssignToNewProjectComponent implements OnInit {
         const currentUserLinks = existingLinks.filter(link => link.memberId === memberId);
         const existingProjectIds = currentUserLinks.map(link => link.projectId);
   
-        const newProjects = projectIds.filter(id => !existingProjectIds.includes(id));
-        const removedProjects = existingProjectIds.filter(id => !projectIds.includes(id));
+        const newProjects = projectIds.filter(projectId => !existingProjectIds.includes(projectId));
+        const removedProjects = existingProjectIds.filter(projectId => !projectIds.includes(projectId));
   
         console.log('➕ Projects to add:', newProjects);
         console.log('➖ Projects to remove:', removedProjects);
   
         newProjects.forEach(projectId => {
-          this.projectMemberLinkService.create(projectId, memberId).subscribe({
+          this.projectMemberLinkService.create(memberId, projectId).subscribe({
             next: (response) => console.log(`✅ Added user ${memberId} to project ${projectId}:`, response),
             error: (err) => console.error(`❌ Error adding user ${memberId} to project ${projectId}:`, err),
           });
