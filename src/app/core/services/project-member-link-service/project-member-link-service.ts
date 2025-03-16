@@ -62,4 +62,21 @@ export class ProjectMemberLinkService {
       })
     );
   }
+
+  delete(projectId: number, memberId: number): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .request('DELETE', `${this.baseUrl}/project_member_links`, {
+        headers,
+        body: { project_id: projectId, member_id: memberId },
+      })
+      .pipe(
+        tap(() => console.log(`🗑️ Deleted project-member link: ${projectId} - ${memberId}`)),
+        catchError((error: HttpErrorResponse) => {
+          console.error('❌ Error deleting project-member link:', error);
+          return throwError(() => new Error(error.error?.error || 'Unknown error'));
+        })
+      );
+  }
+  
 }

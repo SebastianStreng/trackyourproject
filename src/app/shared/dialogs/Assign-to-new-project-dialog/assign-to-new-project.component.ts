@@ -22,6 +22,7 @@ export class AssignToNewProjectComponent implements OnInit {
   currentUser: any = null;
   allMemberLinks: { projectId: number; memberId: number }[] = []; 
   projectMemberLinks: { projectId: number; memberId: number }[] = []; 
+  memberIdArray: number [] = []; 
 
   constructor(
     private router: Router, 
@@ -94,18 +95,22 @@ export class AssignToNewProjectComponent implements OnInit {
         console.log('➖ Projects to remove:', removedProjects);
   
         newProjects.forEach(projectId => {
-          this.projectMemberLinkService.create(memberId, projectId).subscribe({
+          this.projectMemberLinkService.create(projectId, memberId ).subscribe({
             next: (response) => console.log(`✅ Added user ${memberId} to project ${projectId}:`, response),
             error: (err) => console.error(`❌ Error adding user ${memberId} to project ${projectId}:`, err),
           });
         });
   
         if (removedProjects.length > 0) {
-          this.projectMemberLinkService.update(memberId, projectIds).subscribe({
-            next: (response) => console.log(`✅ Removed user ${memberId} from projects:`, removedProjects, response),
-            error: (err) => console.error(`❌ Error removing user ${memberId} from projects:`, err),
-          });
+          this.memberIdArray = [memberId]; 
+          for (const projectId of removedProjects) {
+            this.projectMemberLinkService.delete(projectId, memberId).subscribe({
+              next: (response) => console.log(`✅ Removed user ${memberId} from project ${projectId}:`, response),
+              error: (err) => console.error(`❌ Error removing user ${memberId} from project ${projectId}:`, err),
+            });
+          }
         }
+        
       },
       error: (err) => console.error('❌ Error fetching existing project-member links:', err),
     });
