@@ -172,5 +172,27 @@ export class AddTaskComponent implements OnInit {
   goBack() {
         this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
   }
+
+  deleteTask() {
+    if (!this.task || !this.task.id) {
+      console.warn("⚠️ No task selected for deletion.");
+      return;
+    }
+  
+    if (!confirm(`Are you sure you want to delete the task: "${this.task.title}"?`)) {
+      return;
+    }
+  
+    this.taskService.delete(this.task.id).subscribe({
+      next: () => {
+        console.log(`✅ Task ${this.task?.id} deleted successfully`);
+        this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+      },
+      error: (err) => {
+        console.error(`❌ Error deleting task ${this.task?.id}:`, err);
+      },
+    });
+  }
+  
 }
 

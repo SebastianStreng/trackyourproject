@@ -9,6 +9,7 @@ import { TaskService } from 'src/app/core/services/task-service/task-service';
 import { TaskData } from 'src/app/core/TestData/TaskData';
 import { ProjectMemberService } from 'src/app/core/services/projectmember-service/projectmember-service';
 import { ProjectMemberLinkService } from 'src/app/core/services/project-member-link-service/project-member-link-service';
+import { ProjectService } from 'src/app/core/services/project-service/project-service';
 
 @Component({
   selector: 'app-project-information-dialog',
@@ -34,7 +35,8 @@ export class ProjectInformationDialogComponent implements OnInit {
     private router: Router, 
     private taskService: TaskService, 
     private projectMemberService: ProjectMemberService,
-    private projectMemberLinkService: ProjectMemberLinkService) {}
+    private projectMemberLinkService: ProjectMemberLinkService,
+    private projectService: ProjectService) {}
 
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
@@ -149,8 +151,6 @@ export class ProjectInformationDialogComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error fetching all tasks:', err);
-        //this.allTasks = TaskData.getTasks();
-        //this.filterTasksByProjectId();
       },
     });
   }
@@ -201,7 +201,7 @@ export class ProjectInformationDialogComponent implements OnInit {
       return 'Unassigned';
     }
   
-    // Falls assignedTo eine ID (number) ist, suche den passenden Member
+
     if (typeof task.assignedTo === 'number') {
       const member = this.members.find(m => m.id === task.assignedTo);
       if (member) {
@@ -226,6 +226,83 @@ export class ProjectInformationDialogComponent implements OnInit {
 
   generateRandomId(): number {
     return (Math.floor(1000 + Math.random() * 9000));
+  }
+
+  deleteProject(){
+      if (!this.project || !this.project.id) {
+        console.warn("⚠️ No project selected for deletion.");
+        return;
+      }
+    
+      if (!confirm(`Are you sure you want to delete the project: "${this.project.name}"?`)) {
+        return;
+      }
+      
+      this.deleteProjectRelatedTasks();
+      this.deleteProjectAssignedUsers(); 
+  
+      this.projectService.delete(this.project.id).subscribe({
+        next: () => {
+          console.log(`✅ Project ${this.project.id} deleted successfully.`);
+          this.router.navigate(['/Projects']); // Redirect to project list after deletion
+        },
+        error: (err) => {
+          console.error(`❌ Error deleting project ${this.project.id}:`, err);
+        }
+      });
+    }
+    
+  deleteProjectRelatedTasks() {
+    if (!this.projectTasks || this.projectTasks.length === 0) {
+      console.warn("⚠️ No tasks found to delete for this project.");
+      return;
+    }
+  
+    let deletedTasksCount = 0;
+  
+    this.projectTasks.forEach((task) => {
+      this.taskService.delete(task.id).subscribe({
+        next: () => {
+          console.log(`✅ Task ${task.id} deleted successfully.`);
+          deletedTasksCount++;
+  
+          if (deletedTasksCount === this.projectTasks.length) {
+            console.log("✅ All tasks deleted, refreshing task list...");
+            this.loadAllTasks();  
+          }
+        },
+        error: (err) => {
+          console.error(`❌ Error deleting task ${task.id}:`, err);
+        }
+      });
+    });
+  }
+  
+
+  deleteProjectAssignedUsers() {
+    if (!this.projectMemberLinks || this.projectMemberLinks.length === 0) {
+      console.warn("⚠️ No assigned users found for this project.");
+      return;
+    }
+
+    let deletedUsersCount = 0;
+  
+    this.projectMemberLinks.forEach((link) => {
+      this.projectMemberLinkService.delete(this.project.id, link.memberId).subscribe({
+        next: () => {
+          console.log(`✅ Removed member ${link.memberId} from project ${this.project.id}`);
+          deletedUsersCount++;
+  
+          if (deletedUsersCount === this.projectMemberLinks.length) {
+            console.log("✅ All assigned users removed, refreshing member list...");
+            this.GetProjectMemberLinks();
+          }
+        },
+        error: (err) => {
+          console.error(`❌ Error removing member ${link.memberId}:`, err);
+        }
+      });
+    });
   }
   
   

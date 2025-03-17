@@ -92,12 +92,15 @@ updateTask(task: Task): Observable<Task> {
    * ✅ Löscht eine Task
    */
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/tasks/${id}`).pipe(
-      tap(() => console.log(`Task ${id} deleted`)),
+    return this.http.delete<void>(`${this.baseUrl}/tasks?id=${id}`).pipe(
+      tap(() => console.log(`✅ Task ${id} deleted successfully`)),
       catchError((error) => {
-        console.error(`Error deleting task ${id}:`, error);
+        console.error(`❌ Error deleting task ${id}:`, error);
         return throwError(() => new Error(`Error deleting task ${id}`));
       })
     );
   }
+  
+  
+  
 }

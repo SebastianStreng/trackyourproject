@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Project } from '../../models/project';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -99,13 +99,21 @@ baseUrl = 'http://localhost/api';
     );
   }
 
-  delete(id: number) {
-    return this.http.delete(`${this.baseUrl}/projects/${id}`).pipe(
-      tap(() => console.log(`Project ${id} deleted`)),
-      catchError((error) => {
-        console.error(`Error deleting project ${id}:`, error);
-        return throwError(() => new Error(`Error deleting project ${id}`));
+  delete(projectId: number): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+    return this.http
+      .request('DELETE', `${this.baseUrl}/projects`, {
+        headers,
+        body: { id: projectId }, 
       })
-    );
+      .pipe(
+        tap(() => console.log(`🗑️ Deleted project: ${projectId}`)),
+        catchError((error: HttpErrorResponse) => {
+          console.error('❌ Error deleting project:', error);
+          return throwError(() => new Error(error.error?.error || 'Unknown error'));
+        })
+      );
   }
+  
 }
