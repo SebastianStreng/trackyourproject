@@ -12,6 +12,7 @@ import { AssignToNewProjectComponent } from './shared/dialogs/Assign-to-new-proj
 import { AssignUserToProjectComponent } from './shared/dialogs/assign-user-to-new-project-dialog/assign-user-to-project.component';
 import { LoginPageComponent } from "./pages/login-page/login-page.component";
 import { RegisterPageComponent } from "./pages/register-page/register-page.component";
+import { AllEmployeesPageComponent } from './pages/all-employees-page/all-employees-page.component';
 
 
 @Component({
@@ -28,7 +29,8 @@ import { RegisterPageComponent } from "./pages/register-page/register-page.compo
     AssignToNewProjectComponent,
     AssignUserToProjectComponent,
     LoginPageComponent,
-    RegisterPageComponent
+    RegisterPageComponent,
+    AllEmployeesPageComponent
 ],
   selector: 'app-root',
   templateUrl: './app.component.html',
