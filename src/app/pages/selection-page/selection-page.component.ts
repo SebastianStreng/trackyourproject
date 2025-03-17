@@ -5,7 +5,6 @@ import { SmartphoneCardComponent } from "../../shared/smartphone-card/smartphone
 import { Router } from '@angular/router';
 import { ProjectService } from 'src/app/core/services/project-service/project-service';
 import { AuthenticationService } from 'src/app/core/services/auth-service/authentification-service';
-import { ProjectData } from 'src/app/core/TestData/ProjectData';
 
 @Component({
   selector: 'app-selection-page',
@@ -20,47 +19,15 @@ export class SelectionPageComponent {
   navigateToYourProjects() {
     this.authService.getCurrentProjectMember().subscribe(currentUser => {
       if (currentUser) {
-        this.projectService.getAll().subscribe({
-          next: (projects: any[]) => {
-            const userProjects = projects.filter(project =>
-              project.members && project.members.some((member: { id: number }) => member.id === currentUser.id)
-            );
-    
-            sessionStorage.setItem('projects', JSON.stringify(userProjects));
-            this.router.navigate(['/Projects']);
-          },
-          error: (err) => {
-            console.error('Error fetching projects:', err);
-          }
-        });
+        this.router.navigate(['/Projects'], { queryParams: { filter: 'mine' } });
       } else {
         console.warn('No user found, redirecting to login.');
         this.router.navigate(['/Login']);
       }
     });
-    
   }
-  
-  
-
 
   navigateToAllProjects() {
-    this.projectService.getAll().subscribe({
-      next: (projects: any[]) => {
-        if (!projects || projects.length === 0) {
-          console.warn('Keine Projekte aus der API, lade Testdaten.');
-          projects = ProjectData.getProjects();
-        }
-        sessionStorage.setItem('projects', JSON.stringify(projects));
-        this.router.navigate(['/Projects']);
-      },
-      error: (err) => {
-        console.error('Fehler beim Abrufen der Projekte:', err);
-        //const projects = ProjectData.getProjects();
-        //sessionStorage.setItem('projects', JSON.stringify(projects));
-        this.router.navigate(['/Projects']);
-      }
-    });
+    this.router.navigate(['/Projects'], { queryParams: { filter: 'all' } });
   }
-  
 }
