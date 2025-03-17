@@ -66,11 +66,11 @@ export class CreateProjectDialogComponent implements OnInit {
   }
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   goBack () {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   delete(){
@@ -113,6 +113,6 @@ export class CreateProjectDialogComponent implements OnInit {
   }
 
   closeDialog() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 }

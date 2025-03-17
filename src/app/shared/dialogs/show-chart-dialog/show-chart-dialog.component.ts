@@ -117,7 +117,7 @@ export class ShowChartDialogComponent implements OnInit {
 
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   goBack() {

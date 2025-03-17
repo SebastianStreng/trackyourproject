@@ -185,7 +185,7 @@ export class ProjectInformationDialogComponent implements OnInit {
   }
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   goBack() {

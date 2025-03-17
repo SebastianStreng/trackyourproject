@@ -12,7 +12,7 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
 import { AllEmployeesPageComponent } from './pages/all-employees-page/all-employees-page.component';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'Selection', pathMatch: 'full' }, // Standardroute
+  { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Standardroute
   { path: 'Projects', component: ProjectsComponent },
   { path: 'Selection', component: SelectionPageComponent },
   { path: 'ProjectInformation', component: ProjectInformationDialogComponent},

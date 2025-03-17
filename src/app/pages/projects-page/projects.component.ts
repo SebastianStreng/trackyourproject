@@ -113,10 +113,10 @@ export class ProjectsComponent implements OnInit {
   }
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   goBack() {
-    this.router.navigate(['..']);
+    this.router.navigate(['/Selection']);
   }
 }

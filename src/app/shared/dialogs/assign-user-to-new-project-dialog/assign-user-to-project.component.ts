@@ -128,10 +128,10 @@ export class AssignUserToProjectComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
   }
 
   closeDialog() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
   }
 }

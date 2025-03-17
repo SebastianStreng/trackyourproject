@@ -39,15 +39,14 @@ export class AllEmployeesPageComponent implements OnInit {
 
   goHome() {
     console.log("🏠 Navigating to home...");
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   goBack() {
     console.log("⬅️ Navigating back...");
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
-  // ✅ DELETE User from Database
   deleteUser(memberId: number) {
     if (!confirm(`❗ Are you sure you want to delete this user (ID: ${memberId})?`)) {
       return;
