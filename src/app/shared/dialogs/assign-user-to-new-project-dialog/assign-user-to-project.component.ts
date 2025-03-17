@@ -8,6 +8,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
 import { SharedModule } from '../../shared.module';
 import { DialogCardComponent } from "../../dialog-card/dialog-card.component";
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-assign-user-to-project',
@@ -39,9 +40,24 @@ export class AssignUserToProjectComponent implements OnInit {
       const storedProject = sessionStorage.getItem('selectedProject');
       this.project = storedProject ? JSON.parse(storedProject) : null;
     }
-
-    this.GetAllMembers();
-    this.GetProjectMemberLinks(); 
+  
+    forkJoin({
+      members: this.projectMemberService.getAll(),
+      links: this.projectMemberLinkService.getAll()
+    }).subscribe({
+      next: ({ members, links }) => {
+        this.users = members;
+        this.allMemberLinks = links;
+    
+        console.log('✅ Successfully loaded members and project-member links:', this.users, this.allMemberLinks);
+    
+        if (this.project && this.project.id) {
+          this.ConnectUsersToProject();
+        }
+      },
+      error: (err) => console.error('❌ Error loading data:', err)
+    });
+    
   }
 
   updateUsers() {
@@ -57,6 +73,7 @@ export class AssignUserToProjectComponent implements OnInit {
     this.projectMemberLinkService.update(this.project.id, memberIds).subscribe({
       next: (response) => {
         console.log('✅ Add Users succefully:', response);
+        this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
       },
       error: (err) => {
         console.error('❌ ERROR - could not update users :', err);

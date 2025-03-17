@@ -12,6 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProjectMemberService } from 'src/app/core/services/projectmember-service/projectmember-service';
 import { ProjectMemberLinkService } from 'src/app/core/services/project-member-link-service/project-member-link-service';
+import { catchError, Observable, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-add-task',
@@ -74,6 +75,8 @@ export class AddTaskComponent implements OnInit {
   
       const storedProject = sessionStorage.getItem('selectedProject');
       this.project = storedProject ? JSON.parse(storedProject) : null;
+
+
     }
   
 
@@ -85,8 +88,27 @@ export class AddTaskComponent implements OnInit {
   
     console.log("✅ Final Task state in ngOnInit:", this.task);
 
-    this.GetAllMembers();
-    this.GetProjectMemberLinks(); 
+  this.GetAllMembers().subscribe(() => {
+    this.GetProjectMemberLinks();
+  });
+  }
+
+  isInvalid = {
+    title: false,
+    assignedTo: false,
+    description: false,
+    dueDate: false,
+    status: false
+  };
+
+  validateFields(): boolean {
+    this.isInvalid.title = !this.title?.trim();
+    this.isInvalid.assignedTo = !this.assignedTo;
+    this.isInvalid.description = !this.description?.trim();
+    this.isInvalid.dueDate = !this.dueDate;
+    this.isInvalid.status = !this.selectedStatus;
+
+    return !Object.values(this.isInvalid).includes(true);
   }
 
 
@@ -109,17 +131,25 @@ export class AddTaskComponent implements OnInit {
     });
   }
 
-  GetAllMembers() {
-    this.projectMemberService.getAll().subscribe({
-      next: (members) => {
+  GetAllMembers(): Observable<ProjectMember[]> {
+    return this.projectMemberService.getAll().pipe(
+      tap((members) => {
         this.users = members;
-        console.log('All members loaded:', this.users);
-      },
-      error: (err) => {
-        console.error('Error fetching members:', err);
-      }
-    });
+        console.log('✅ All members loaded:', this.users);
+      }),
+      catchError((err) => {
+        console.error('❌ Error fetching members:', err);
+        return of([]); // Falls ein Fehler auftritt, wird ein leeres Array zurückgegeben
+      })
+    );
   }
+
+  getAssignedMemberName(memberId: number): string {
+    const member = this.members.find(m => m.id === memberId);
+    return member ? member.name : "Assign to Member";
+}
+
+  
 
   ConnectUsersToProject() {
     this.projectMemberLinks = this.allMemberLinks.filter(link => link.projectId === this.project.id);
@@ -166,7 +196,7 @@ export class AddTaskComponent implements OnInit {
   }
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/Selection']);
   }
 
   goBack() {

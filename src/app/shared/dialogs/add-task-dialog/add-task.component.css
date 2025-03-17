@@ -30,6 +30,12 @@
   .right-info {
     /* Hier kannst du weitere Styles ergänzen, falls nötig */
   }
+
+  .invalid {
+    border: 2px solid red !important;
+    background-color: #ffcccc;
+}
+
   
   .close-button {
     position: absolute;

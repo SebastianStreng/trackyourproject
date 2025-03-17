@@ -1,61 +1,70 @@
 <app-dialog-card>
-    <div class="header-container">
-        <h2 class="card-header">{{ project?.name }}</h2>
-        <button class="close-button" (click)="closeDialog()">&times;</button>
-      </div>
+  <div class="header-container">
+      <h2 class="card-header">{{ project?.name }}</h2>
+      <button class="close-button" (click)="closeDialog()">&times;</button>
+  </div>
 
-      <div class="info">
-        <div class="left-info">
+  <div class="info">
+      <div class="left-info">
           <div>Project ID: {{ project?.id }}</div>
           <div>Task ID: {{ task?.id }}</div>
-        </div>
-        <div class="right-info">
-          <div>        <p-select 
-            size="large"
-            [style]="{'width': '160px'}"
-            [options]="statusOptions" 
-            [(ngModel)]="selectedStatus" 
-            optionLabel="label" 
-            placeholder="{{selectedStatus}}" 
-            class="w-full md:w-56" /></div>
-        </div>
       </div>
-      
-
-      <div class = "textBox-container">
-
-
-
-        <input pInputText [(ngModel)]="title" 
-        [style]="{'width': '300px'}" 
-        type="text" 
-        pSize="large" 
-        placeholder="Task Name" 
-        />
-
-        <p-select 
-        size="large"
-        [style]="{'width': '300px'}"
-        [options]="members" 
-        [ngModel]="assignedTo" 
-        (ngModelChange)="assignedTo = $event.id" 
-        optionLabel="name" 
-        placeholder="Assign to Member" 
-        class="w-full md:w-56" />
-
-        <textarea pTextarea [(ngModel)]="description" [style]="{'width': '300px'}"pSize="large" placeholder="Description" rows="3"></textarea>
-
-        <p-datepicker [(ngModel)]="dueDate" [style]="{'width': '300px'}" size="large" placeholder="Pick a Due Date" dateFormat="dd.mm.yy" />
+      <div class="right-info">
+          <p-select 
+              size="large"
+              [style]="{'width': '160px'}"
+              [options]="statusOptions" 
+              [(ngModel)]="selectedStatus" 
+              optionLabel="label" 
+              [ngClass]="{'invalid': isInvalid.status}" 
+              placeholder="Select Status"
+              class="w-full md:w-56" />
       </div>
+  </div>
 
+  <div class="textBox-container">
+      <input pInputText [(ngModel)]="title" 
+          [style]="{'width': '300px'}" 
+          type="text" 
+          pSize="large" 
+          placeholder="Task Name" 
+          [ngClass]="{'invalid': isInvalid.title}" 
+      />
 
+      <p-select 
+          size="large"
+          [style]="{'width': '300px'}"
+          [options]="members" 
+          [(ngModel)]="assignedTo" 
+          optionLabel="name" 
+          [ngClass]="{'invalid': isInvalid.assignedTo}" 
+          [placeholder]="assignedTo ? getAssignedMemberName(assignedTo) : 'Assign to Member'"
+          class="w-full md:w-56" 
+      />
 
-      <div class="footer-container">
-        <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
-        <button class="footer-button" (click)="deleteTask()"><span class="pi pi-trash"></span></button>
-        <button class="footer-button" (click)="AddOrUpdateTask()"><span class="pi pi-check"></span></button>
-        <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+      <textarea pTextarea [(ngModel)]="description" 
+          [style]="{'width': '300px'}"
+          pSize="large" 
+          placeholder="Description" 
+          rows="3"
+          [ngClass]="{'invalid': isInvalid.description}">
+      </textarea>
 
-      </div>
+      <p-datepicker [(ngModel)]="dueDate" 
+          [style]="{'width': '300px'}" 
+          size="large" 
+          placeholder="Pick a Due Date" 
+          dateFormat="dd.mm.yy"
+          [ngClass]="{'invalid': isInvalid.dueDate}" 
+      />
+  </div>
 
+  <div class="footer-container">
+      <button class="footer-button" (click)="goHome()"><span class="pi pi-home"></span></button>
+      <button class="footer-button" (click)="deleteTask()"><span class="pi pi-trash"></span></button>
+      <button class="footer-button" (click)="validateFields() ? AddOrUpdateTask() : null">
+          <span class="pi pi-check"></span>
+      </button>
+      <button class="footer-button" (click)="goBack()"><span class="pi pi-arrow-left"></span></button>
+  </div>
 </app-dialog-card>
