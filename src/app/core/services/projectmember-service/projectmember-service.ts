@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { ProjectMember } from '../../models/project';
@@ -13,9 +13,9 @@ export class ProjectMemberService {
 
   constructor(private http: HttpClient) {}
 
-  getAll() {
+  getAll(): Observable<ProjectMember[]> {
     return this.http.get<{ data: any[] }>(`${this.baseUrl}/project_members`).pipe(
-      tap((r) => console.log(r)),
+      tap((r) => console.log('📥 Fetched project members:', r)),
       map((response) => response.data),
       map((members) =>
         members.map(
@@ -28,27 +28,48 @@ export class ProjectMemberService {
             } as ProjectMember)
         )
       ),
-      catchError((error: any) => {
-        console.error('Error fetching data:', error);
-        return throwError(() => new Error('Error fetching data'));
+      catchError((error: HttpErrorResponse) => {
+        console.error('❌ Error fetching data:', error);
+        return throwError(() => new Error('Error fetching project members'));
       })
     );
   }
 
   store(member: ProjectMember): Observable<ProjectMember> {
     return this.http.post<ProjectMember>(`${this.baseUrl}/project_members`, { data: member }).pipe(
-      tap((res: any) => {
-        console.log('User registered successfully:', res);
-        return res['data'];
-      }),
-      catchError((error) => {
-        console.error('Error while registering:', error);
-        throw error;
+      tap((res: any) => console.log('✅ User registered successfully:', res)),
+      catchError((error: HttpErrorResponse) => {
+        console.error('❌ Error while registering:', error);
+        return throwError(() => new Error(error.error?.message || 'Unknown error'));
       })
     );
   }
 
-  update(member: ProjectMember) {
-    return this.http.put(`${this.baseUrl}/update_project_member`, { data: member });
+  update(member: ProjectMember): Observable<ProjectMember> {
+    return this.http.put<ProjectMember>(`${this.baseUrl}/update_project_member`, { data: member }).pipe(
+      tap((res) => console.log('✅ User updated successfully:', res)),
+      catchError((error: HttpErrorResponse) => {
+        console.error('❌ Error updating user:', error);
+        return throwError(() => new Error(error.error?.message || 'Unknown error'));
+      })
+    );
+  }
+
+  // ✅ DELETE: Entferne einen Benutzer anhand der ID
+  delete(memberId: number): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http
+      .request('DELETE', `${this.baseUrl}/project_members`, {
+        headers,
+        body: { id: memberId },
+      })
+      .pipe(
+        tap(() => console.log(`🗑️ Deleted project member: ${memberId}`)),
+        catchError((error: HttpErrorResponse) => {
+          console.error('❌ Error deleting project member:', error);
+          return throwError(() => new Error(error.error?.message || 'Unknown error'));
+        })
+      );
   }
 }

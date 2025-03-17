@@ -47,8 +47,22 @@ export class AllEmployeesPageComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  // ✅ DELETE User from Database
   deleteUser(memberId: number) {
+    if (!confirm(`❗ Are you sure you want to delete this user (ID: ${memberId})?`)) {
+      return;
+    }
+
     console.log(`🗑️ Deleting user with ID: ${memberId}`);
-    // Add delete logic
+
+    this.projectMemberService.delete(memberId).subscribe({
+      next: () => {
+        console.log(`✅ User with ID ${memberId} deleted successfully.`);
+        this.projectMembers = this.projectMembers.filter(member => member.id !== memberId);
+      },
+      error: (err) => {
+        console.error(`❌ Error deleting user with ID ${memberId}:`, err);
+      }
+    });
   }
 }
