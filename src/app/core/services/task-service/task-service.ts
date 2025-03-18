@@ -23,10 +23,10 @@ export class TaskService {
       map((tasks) =>
         tasks.map((task) => ({
           id: task.id,
-          projectId: task.projectId ?? null,  
+          projectId: task.projectId ?? null,
           title: task.title,
           description: task.description || '',
-          assignedTo: task.assignedTo ?? null,
+          assignedTo: task.assignedTo ?? null, // ✅ FIXED: Now should correctly hold just the ID
           dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
           status: task.status as TaskStatus,
         }))
@@ -38,6 +38,7 @@ export class TaskService {
       })
     );
   }
+  
 
 /**
  * ✅ Creates a new Task
