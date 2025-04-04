@@ -8,7 +8,7 @@ import { Task, TaskStatus } from '../../models/project';
   providedIn: 'root',
 })
 export class TaskService {
-  // baseUrl = 'http://trackyourproject.lovestoblog.com/api'; //does not work due to CORS issues
+
   baseUrl = 'http://localhost/api';
 
   constructor(private http: HttpClient) {}

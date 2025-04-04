@@ -94,6 +94,7 @@ export class ProjectInformationDialogComponent implements OnInit {
           const memberIDs = this.projectMemberLinks.map(link => link.memberId);
           console.log('Member IDS: ', memberIDs)
           this.members = this.users.filter(user => memberIDs.includes(Number(user.id)))
+          console.log('members in this project: ', this.members)
         }
       },
       error: (err) => {
@@ -207,7 +208,7 @@ export class ProjectInformationDialogComponent implements OnInit {
       if (member) {
         return member.name;
       } else {
-        console.warn(`⚠️ Kein Mitglied mit ID ${task.assignedTo} gefunden!`);
+        console.warn(`⚠️ No Member with ID ${task.assignedTo} found!`);
         return `User ID: ${task.assignedTo}`;
       }
     }
