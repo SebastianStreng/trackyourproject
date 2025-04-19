@@ -28,9 +28,11 @@ export class ProjectInformationDialogComponent implements OnInit {
   users: ProjectMember[] = [];
   allMemberLinks: { projectId: number; memberId: number }[] = []; 
   projectMemberLinks: { projectId: number; memberId: number }[] = []; 
+  dataReady = false;
+  memberLenght!: number
 
-
-
+  
+  
   constructor(
     private router: Router, 
     private taskService: TaskService, 
@@ -60,10 +62,36 @@ export class ProjectInformationDialogComponent implements OnInit {
       this.projectDescription = this.project.description;
     }
 
-    this.loadAllTasks();
-    this.GetAllMembers();
-    this.GetProjectMemberLinks();
+
+    this.loadMembersAndLinks(); 
+
   }
+
+  loadMembersAndLinks() {
+    this.projectMemberService.getAll().subscribe({
+      next: (users) => {
+        this.users = users;
+  
+        this.projectMemberLinkService.getAll().subscribe({
+          next: (links) => {
+            this.allMemberLinks = links;
+  
+            if (this.project && this.project.id) {
+              this.projectMemberLinks = this.allMemberLinks.filter(link => link.projectId === this.project.id);
+              const memberIDs = this.projectMemberLinks.map(link => link.memberId);
+              this.members = this.users.filter(user => memberIDs.includes(Number(user.id)));
+              this.updateMemberMap();
+  
+              this.loadAllTasks();
+            }
+          },
+          error: (err) => console.error('Error loading member links:', err)
+        });
+      },
+      error: (err) => console.error('Error loading users:', err)
+    });
+  }
+  
 
   openChart(){
     sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
@@ -76,25 +104,30 @@ export class ProjectInformationDialogComponent implements OnInit {
       next: (members) => {
         this.users = members;
         console.log('All members loaded:', this.users);
+  
+        this.GetProjectMemberLinks();  
       },
       error: (err) => {
         console.error('Error fetching members:', err);
       }
     });
   }
+  
 
   GetProjectMemberLinks() {
     this.projectMemberLinkService.getAll().subscribe({
       next: (links) => {
         this.allMemberLinks = links; 
         console.log('All project-member links fetched:', this.allMemberLinks);
-
+  
         if (this.project && this.project.id) {
           this.ConnectUsersToProject(); 
           const memberIDs = this.projectMemberLinks.map(link => link.memberId);
           console.log('Member IDS: ', memberIDs)
           this.members = this.users.filter(user => memberIDs.includes(Number(user.id)))
           console.log('members in this project: ', this.members)
+  
+          this.dataReady = true;  
         }
       },
       error: (err) => {
@@ -102,6 +135,7 @@ export class ProjectInformationDialogComponent implements OnInit {
       }
     });
   }
+  
 
   ConnectUsersToProject() {
     this.projectMemberLinks = this.allMemberLinks.filter(link => link.projectId === this.project.id);
@@ -149,6 +183,8 @@ export class ProjectInformationDialogComponent implements OnInit {
         console.log('✅ All tasks loaded:', this.allTasks);
         
         this.filterTasksByProjectId();
+        this.dataReady = true; 
+        this.memberLenght = this.members.length   
       },
       error: (err) => {
         console.error('❌ Error fetching all tasks:', err);
@@ -195,26 +231,42 @@ export class ProjectInformationDialogComponent implements OnInit {
 
     
 
+  memberMap = new Map<number, ProjectMember>();
+
+  updateMemberMap() {
+    console.log('🛠️ Building memberMap...');
+    this.memberMap.clear();
+    this.members.forEach(m => {
+      const id = Number(m.id); // ensure it's a number
+      console.log(`➕ Adding to map: ${id} → ${m.name}`);
+      this.memberMap.set(id, m); // ✅ use numeric key
+    });
+  }
+  
+  
   getAssignedTo(task: Task): string {
-    console.log(`✅ Assigned to (raw value):`, task.assignedTo);
+    console.log('🔍 Checking assignedTo for task:', task.title, '| assignedTo:', task.assignedTo);
   
     if (!task.assignedTo) {
+      console.log('ℹ️ Task has no assigned user.');
       return 'Unassigned';
     }
   
-
-    if (typeof task.assignedTo === 'number') {
-      const member = this.members.find(m => m.id === task.assignedTo);
-      if (member) {
-        return member.name;
-      } else {
-        console.warn(`⚠️ No Member with ID ${task.assignedTo} found!`);
-        return `User ID: ${task.assignedTo}`;
-      }
-    }
+    console.log('📦 Current memberMap keys:', Array.from(this.memberMap.keys()));
   
-    return 'Unknown';
+    const memberId = Number(task.assignedTo);
+    const member = this.memberMap.get(memberId);
+  
+    if (member) {
+      console.log(`✅ Found member for ID ${memberId}:`, member.name);
+      return member.name;
+    } else {
+      console.warn(`⚠️ No member found in memberMap for ID ${memberId}`);
+      return `User ID: ${task.assignedTo}`;
+    }
   }
+  
+  
   
 
   getTaskStatus(task: Task){

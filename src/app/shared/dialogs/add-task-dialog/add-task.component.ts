@@ -49,6 +49,7 @@ export class AddTaskComponent implements OnInit {
     private taskService: TaskService, 
     private projectMemberService: ProjectMemberService,
     private projectMemberLinkService: ProjectMemberLinkService) {}
+
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
   
@@ -61,6 +62,7 @@ export class AddTaskComponent implements OnInit {
         this.task = navigation.extras.state['task'];
         this.alreadyExists = true;
         sessionStorage.setItem('selectedTask', JSON.stringify(this.task));  
+
       }
       
       if (navigation.extras.state['project']) {
@@ -76,7 +78,11 @@ export class AddTaskComponent implements OnInit {
       const storedProject = sessionStorage.getItem('selectedProject');
       this.project = storedProject ? JSON.parse(storedProject) : null;
 
-
+      if (this.task && this.task.id) {
+        this.alreadyExists = true;
+      }
+          console.log("Exists: ", this.alreadyExists);
+      
     }
   
 
@@ -169,9 +175,8 @@ export class AddTaskComponent implements OnInit {
       dueDate: this.dueDate ? new Date(this.dueDate) : null,
       status: this.selectedStatus ?? TaskStatus.NotStarted,
     };
+    console.log("Exists: ", this.alreadyExists);
     
-  
-  
     if (this.alreadyExists) {
       this.taskService.updateTask(taskData).subscribe({
         next: (updatedTask) => {
@@ -184,7 +189,7 @@ export class AddTaskComponent implements OnInit {
       this.taskService.createTask(taskData).subscribe({
         next: (createdTask) => {
           console.log('Task created:', createdTask);
-          this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+          //this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
         },
         error: (err) => console.error('Error creating task:', err),
       });

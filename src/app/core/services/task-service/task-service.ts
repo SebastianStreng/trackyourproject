@@ -74,19 +74,26 @@ updateTask(task: Task): Observable<Task> {
 
   console.log('📤 Sending request to update task:', task);
 
-  return this.http.put<Task>(`${this.baseUrl}/tasks`, task, { headers }).pipe(
+  const payload = {
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    assigned_to: task.assignedTo,
+    due_date: task.dueDate,
+    status: task.status,
+  };
+
+  return this.http.put<Task>(`${this.baseUrl}/tasks`, payload, { headers }).pipe(
     tap((updatedTask) => {
       console.log('✅ Task successfully updated:', updatedTask);
     }),
     catchError((error) => {
       console.error('❌ Error updating task:', error);
-      console.error('🔍 HTTP Status:', error.status);
-      console.error('🔍 Error Message:', error.message);
-      console.error('🔍 API Response:', error.error);
       return throwError(() => new Error('Error updating task'));
     })
   );
 }
+
 
 
   /**

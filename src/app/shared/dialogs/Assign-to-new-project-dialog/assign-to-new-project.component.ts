@@ -163,10 +163,10 @@ export class AssignToNewProjectComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['Selection']);
   }
 
   closeDialog() {
-    this.router.navigate(['/']);
+    this.router.navigate(['Selection']);
   }
 }

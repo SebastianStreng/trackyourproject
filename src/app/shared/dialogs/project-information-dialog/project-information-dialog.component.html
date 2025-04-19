@@ -11,7 +11,7 @@
     </div>
 
     <div class="group">
-      <input id="membersCount" required type="text" class="input" [value]="project?.members?.length ?? 0" readonly>
+      <input id="membersCount" required type="text" class="input" [value]="memberLenght" readonly>
       <label for="membersCount">Number of Members</label>
     </div>
 
@@ -22,11 +22,13 @@
   </div>
 
   <p-table 
-    [value]="projectTasks" 
-    [scrollable]="true" 
-    [style]="{ width: '100%', minHeight: '250px', maxHeight: '470px' }" 
-    scrollHeight="230px">
-    <ng-template pTemplate="header">
+  *ngIf="dataReady"
+  [value]="projectTasks" 
+  [scrollable]="true" 
+  [style]="{ width: '100%', minHeight: '250px', maxHeight: '470px' }" 
+  scrollHeight="230px"
+  >
+  <ng-template pTemplate="header">
       <tr>
         <th>Tasks</th>
         <th>Assigned to</th>

@@ -8,7 +8,6 @@ import { ProjectMember } from '../../models/project';
   providedIn: 'root',
 })
 export class ProjectMemberService {
-  // baseUrl = 'http://trackyourproject.lovestoblog.com/api';
   baseUrl = 'http://localhost/api';
 
   constructor(private http: HttpClient) {}
@@ -55,7 +54,7 @@ export class ProjectMemberService {
     );
   }
 
-  // ✅ DELETE: Entferne einen Benutzer anhand der ID
+
   delete(memberId: number): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
