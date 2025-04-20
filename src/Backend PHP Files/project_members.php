@@ -96,11 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     $id = (int) $input['id'];
 
-    // Lösche zuerst alle Verknüpfungen dieses Mitglieds aus project_member_links
     $deleteLinksSql = "DELETE FROM project_member_links WHERE member_id = $id";
     mysqli_query($con, $deleteLinksSql);
 
-    // Lösche das Mitglied aus project_members
     $deleteSql = "DELETE FROM project_members WHERE id = $id";
 
     if (mysqli_query($con, $deleteSql)) {
@@ -112,7 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     exit;
 }
 
-// ❌ If the method is not allowed, return a 405 error
 http_response_code(405);
 echo json_encode(["error" => "Method Not Allowed"]);
 ?>

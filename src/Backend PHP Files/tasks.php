@@ -33,8 +33,9 @@ if ($method === 'GET') {
 function getTasks($con)
 {
     $tasks = [];
-    $sql = "SELECT t.id, t.project_id, t.title, t.description, t.assigned_to, 
-                   t.due_date, t.status, p.name AS project_name, pm.name AS assigned_to_name
+    $sql = "SELECT t.id, t.project_id, t.title, t.description, 
+                   t.assigned_to, t.due_date, t.status, 
+                   p.name AS project_name, pm.id AS assigned_member_id, pm.name AS assigned_to_name
             FROM tasks t
             JOIN projects p ON t.project_id = p.id
             LEFT JOIN project_members pm ON t.assigned_to = pm.id";
@@ -46,10 +47,7 @@ function getTasks($con)
                 'projectId' => (int) $row['project_id'],
                 'title' => $row['title'],
                 'description' => $row['description'] ?? '',
-                'assigned_to' => [
-                    'id' => (int) $row['assigned_to'],
-                    'name' => $row['assigned_to_name']
-                ],
+                'assignedTo' => $row['assigned_member_id'] ? (int) $row['assigned_member_id'] : null,
                 'due_date' => $row['due_date'] ?? null,
                 'status' => $row['status'] ?? 'Not Started',
                 'project_name' => $row['project_name']
@@ -61,6 +59,7 @@ function getTasks($con)
         echo json_encode(["message" => "Error retrieving tasks", "error" => mysqli_error($con)]);
     }
 }
+
 
 // ✅ POST: Create a new task
 function createTask($con)
