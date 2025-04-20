@@ -78,7 +78,7 @@ export class AddTaskComponent implements OnInit {
       const storedProject = sessionStorage.getItem('selectedProject');
       this.project = storedProject ? JSON.parse(storedProject) : null;
 
-      if (this.task && this.task.id) {
+      if (this.task && this.task.id && this.task.title) {
         this.alreadyExists = true;
       }
           console.log("Exists: ", this.alreadyExists);
@@ -181,7 +181,7 @@ export class AddTaskComponent implements OnInit {
       this.taskService.updateTask(taskData).subscribe({
         next: (updatedTask) => {
           console.log('Task updated:', updatedTask);
-          this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+          //this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
         },
         error: (err) => console.error('Error updating task:', err),
       });
