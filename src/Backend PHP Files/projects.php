@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'description' => $row['description'] ?? '',
-                'start_date' => $row['start_date'] ?? null,
-                'end_date' => $row['end_date'] ?? null,
+                'startDate' => $row['start_date'] ?? null,
+                'endDate' => $row['end_date'] ?? null,
             ];
         }
         echo json_encode(['data' => $projects], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -97,6 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     mysqli_stmt_execute($stmtLinks);
     mysqli_stmt_close($stmtLinks);
 
+    // Delete the project itself
+    $deleteProjectSql = "DELETE FROM projects WHERE id = ?";
+    $stmtProject = mysqli_prepare($con, $deleteProjectSql);
+    mysqli_stmt_bind_param($stmtProject, "i", $projectId);
 
     if (mysqli_stmt_execute($stmtProject)) {
         echo json_encode(["message" => "Project deleted successfully"]);

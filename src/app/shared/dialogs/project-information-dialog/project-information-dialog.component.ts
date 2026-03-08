@@ -43,8 +43,8 @@ export class ProjectInformationDialogComponent implements OnInit {
   ngOnInit(): void {
     const navigation = this.router.getCurrentNavigation();
     
-    if (navigation?.extras.state && navigation.extras.state['selectedProject']) {
-      this.project = navigation.extras.state['selectedProject'];
+    if (navigation?.extras.state && (navigation.extras.state['selectedProject'] || navigation.extras.state['project'])) {
+      this.project = navigation.extras.state['selectedProject'] || navigation.extras.state['project'];
       console.log('✅ Project received from state:', this.project);
     } else {
       const storedProject = sessionStorage.getItem('selectedProject');
@@ -95,8 +95,8 @@ export class ProjectInformationDialogComponent implements OnInit {
 
   openChart(){
     sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
-    sessionStorage.setItem('ProjectRelatedTasks', JSON.stringify(this.allTasks))
-    this.router.navigate(['/ShowChartDialog'], { state: { project: this.project, allTasks: this.allTasks } });
+    sessionStorage.setItem('ProjectRelatedTasks', JSON.stringify(this.projectTasks))
+    this.router.navigate(['/ShowChartDialog'], { state: { project: this.project, allTasks: this.projectTasks } });
   }
 
   GetAllMembers() {
@@ -145,28 +145,16 @@ export class ProjectInformationDialogComponent implements OnInit {
   }
   
   addTask(task?: Task) {
-    if (!task) {
-      console.warn('⚠️ Kein Task übergeben! Erstelle neuen Task...');
-      task = {
-        id: this.generateRandomId(),  
-        projectId: this.project ? this.project.id : 0,
-        title: '',
-        description: '',
-        assignedTo: null,
-        dueDate: null,
-        status: TaskStatus.NotStarted
-      };
-    }
-  
-    this.selectedTask = task;
-  
-    sessionStorage.setItem('selectedTask', JSON.stringify(task));
     sessionStorage.setItem('selectedProject', JSON.stringify(this.project));
-  
-    console.log("✅ Add Task To local Cache:", JSON.stringify(task, null, 2));
-    console.log("✅ Navigating with state:", { project: this.project, task: task });
-  
-    this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
+
+    if (task) {
+      this.selectedTask = task;
+      sessionStorage.setItem('selectedTask', JSON.stringify(task));
+      this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project, task: task } });
+    } else {
+      sessionStorage.removeItem('selectedTask');
+      this.router.navigate(['/AddOrUpdateTask'], { state: { project: this.project } });
+    }
   }
 
   AddUserToProject (){
@@ -203,7 +191,7 @@ export class ProjectInformationDialogComponent implements OnInit {
         return;
       }
   
-      this.projectTasks = this.allTasks.filter(task => task.projectId == this.project?.id)
+      this.projectTasks = this.allTasks.filter(task => Number(task.projectId) === Number(this.project?.id))
 
       if (this.projectTasks.length === 0) {
         console.warn(`⚠️ Warning: No tasks found for project ID ${this.project.id}`);

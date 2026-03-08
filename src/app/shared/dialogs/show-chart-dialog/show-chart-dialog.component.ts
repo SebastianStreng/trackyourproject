@@ -121,6 +121,6 @@ export class ShowChartDialogComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+    this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
 }
 }

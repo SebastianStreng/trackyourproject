@@ -12,6 +12,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ProjectService } from 'src/app/core/services/project-service/project-service';
+import { ProjectMemberLinkService } from 'src/app/core/services/project-member-link-service/project-member-link-service';
 import { MemberData } from 'src/app/core/TestData/MemberData';
 
 @Component({
@@ -42,9 +43,10 @@ export class CreateProjectDialogComponent implements OnInit {
   selectedMembers: ProjectMember[] = []; 
 
   constructor(
-    private router: Router, 
-    private projectService: ProjectService, 
-    private projectMemberService: ProjectMemberService
+    private router: Router,
+    private projectService: ProjectService,
+    private projectMemberService: ProjectMemberService,
+    private projectMemberLinkService: ProjectMemberLinkService
   ) {} 
 
   ngOnInit(): void {
@@ -78,29 +80,48 @@ export class CreateProjectDialogComponent implements OnInit {
   }
 
   createNew(){
-    this.startDate = new Date (); 
+    this.startDate = new Date();
 
     if (!this.name || !this.startDate) {
       console.error("❌ Name and start date are required!");
       return;
     }
 
+    // Collect checked members from checkbox binding
+    this.selectedMembers = this.members.filter((m: any) => m.selected);
+
     const project: Project = {
       id: this.id ?? this.generateRandomId(),
       name: this.name,
       description: this.description ?? '',
       startDate: this.startDate!,
-      endDate: this.endDate ?? undefined, 
-      members: this.selectedMembers, 
-      tasks: [] 
+      endDate: this.endDate ?? undefined,
+      members: this.selectedMembers,
+      tasks: []
     };
-    
+
     console.log("📤 Sending new project:", project);
 
     this.projectService.create(project).subscribe({
-      next: (createdProject) => {
-        console.log("✅ Project successfully created:", createdProject);
-        this.router.navigate(['/Selection']); 
+      next: (response: any) => {
+        const newProjectId = response.id;
+        console.log("✅ Project successfully created with ID:", newProjectId);
+
+        if (this.selectedMembers.length > 0 && newProjectId) {
+          const memberIds = this.selectedMembers.map(m => m.id);
+          this.projectMemberLinkService.update(newProjectId, memberIds).subscribe({
+            next: () => {
+              console.log("✅ Members linked to project");
+              this.router.navigate(['/Selection']);
+            },
+            error: (err) => {
+              console.error("❌ Error linking members:", err);
+              this.router.navigate(['/Selection']);
+            }
+          });
+        } else {
+          this.router.navigate(['/Selection']);
+        }
       },
       error: (err) => {
         console.error("❌ Error creating project:", err);

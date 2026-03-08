@@ -10,19 +10,19 @@ import { AssignUserToProjectComponent } from './shared/dialogs/assign-user-to-ne
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { AllEmployeesPageComponent } from './pages/all-employees-page/all-employees-page.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Standardroute
-  { path: 'Projects', component: ProjectsComponent },
-  { path: 'Selection', component: SelectionPageComponent },
-  { path: 'ProjectInformation', component: ProjectInformationDialogComponent},
-  { path: 'AddOrUpdateTask', component: AddTaskComponent},
-  { path: 'ShowChartDialog', component: ShowChartDialogComponent},
-  { path: 'CreateNewProject', component: CreateProjectDialogComponent},
-  { path: 'AssignToNewProject', component: AssignToNewProjectComponent},
-  { path: 'AddUserToProject', component: AssignUserToProjectComponent},
-  { path: 'Login', component: LoginPageComponent},
-  { path: 'Register', component: RegisterPageComponent},
-  { path: 'AllEmployees', component: AllEmployeesPageComponent},
-  
+  { path: '', redirectTo: 'Login', pathMatch: 'full' },
+  { path: 'Login', component: LoginPageComponent },
+  { path: 'Register', component: RegisterPageComponent },
+  { path: 'Selection', component: SelectionPageComponent, canActivate: [authGuard] },
+  { path: 'Projects', component: ProjectsComponent, canActivate: [authGuard] },
+  { path: 'ProjectInformation', component: ProjectInformationDialogComponent, canActivate: [authGuard] },
+  { path: 'AddOrUpdateTask', component: AddTaskComponent, canActivate: [authGuard] },
+  { path: 'ShowChartDialog', component: ShowChartDialogComponent, canActivate: [authGuard] },
+  { path: 'CreateNewProject', component: CreateProjectDialogComponent, canActivate: [authGuard] },
+  { path: 'AssignToNewProject', component: AssignToNewProjectComponent, canActivate: [authGuard] },
+  { path: 'AddUserToProject', component: AssignUserToProjectComponent, canActivate: [authGuard] },
+  { path: 'AllEmployees', component: AllEmployeesPageComponent, canActivate: [authGuard] },
 ];

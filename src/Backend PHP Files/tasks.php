@@ -48,7 +48,7 @@ function getTasks($con)
                 'title' => $row['title'],
                 'description' => $row['description'] ?? '',
                 'assignedTo' => $row['assigned_member_id'] ? (int) $row['assigned_member_id'] : null,
-                'due_date' => $row['due_date'] ?? null,
+                'dueDate' => $row['due_date'] ?? null,
                 'status' => $row['status'] ?? 'Not Started',
                 'project_name' => $row['project_name']
             ];
@@ -79,9 +79,9 @@ function createTask($con)
     $status = is_array($data['status']) ? ($data['status']['value'] ?? 'Not Started') : $data['status'];
 
     // Validate required fields
-    $required_fields = ['project_id', 'title', 'description', 'assigned_to', 'due_date', 'status'];
+    $required_fields = ['project_id', 'title', 'status'];
     foreach ($required_fields as $field) {
-        if (!isset($data[$field]) || empty($data[$field])) {
+        if (!isset($data[$field]) || (is_string($data[$field]) && empty(trim($data[$field])))) {
             http_response_code(400);
             echo json_encode(["message" => "Missing required field: $field"]);
             return;
@@ -91,22 +91,27 @@ function createTask($con)
     // Sanitize inputs
     $projectId = (int) $data['project_id'];
     $title = mysqli_real_escape_string($con, trim($data['title']));
-    $description = mysqli_real_escape_string($con, trim($data['description']));
-    $assigned_to = (int) $data['assigned_to'];
-    $due_date = mysqli_real_escape_string($con, trim($data['due_date']));
+    $description = isset($data['description']) ? mysqli_real_escape_string($con, trim($data['description'])) : '';
+    $assigned_to = !empty($data['assigned_to']) ? (int) $data['assigned_to'] : null;
+    $due_date = !empty($data['due_date']) ? date('Y-m-d', strtotime(trim($data['due_date']))) : null;
     $status = mysqli_real_escape_string($con, $status);
 
-    $sql = "INSERT INTO tasks (project_id, title, description, assigned_to, due_date, status) 
+    $sql = "INSERT INTO tasks (project_id, title, description, assigned_to, due_date, status)
             VALUES (?, ?, ?, ?, ?, ?)";
-    
+
     $stmt = mysqli_prepare($con, $sql);
     mysqli_stmt_bind_param($stmt, "ississ", $projectId, $title, $description, $assigned_to, $due_date, $status);
 
-    if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["message" => "Task successfully created", "task_id" => mysqli_insert_id($con)]);
-    } else {
-        http_response_code(500);
-        echo json_encode(["message" => "Error creating task", "error" => mysqli_error($con)]);
+    try {
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(["message" => "Task successfully created", "task_id" => mysqli_insert_id($con)]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Error creating task", "error" => mysqli_error($con)]);
+        }
+    } catch (\mysqli_sql_exception $e) {
+        http_response_code(400);
+        echo json_encode(["message" => "Error creating task", "error" => $e->getMessage()]);
     }
 
     mysqli_stmt_close($stmt);
@@ -118,7 +123,7 @@ function updateTask($con)
     $json = file_get_contents("php://input");
     $data = json_decode($json, true);
 
-    if (!isset($data['id'], $data['title'], $data['description'], $data['assigned_to'], $data['due_date'], $data['status'])) {
+    if (!isset($data['id'], $data['title'], $data['status'])) {
         http_response_code(400);
         echo json_encode(["message" => "Missing parameters"]);
         return;
@@ -126,9 +131,9 @@ function updateTask($con)
 
     $id = (int) $data['id'];
     $title = mysqli_real_escape_string($con, trim($data['title']));
-    $description = mysqli_real_escape_string($con, trim($data['description']));
-    $assigned_to = (int) $data['assigned_to'];
-    $due_date = mysqli_real_escape_string($con, trim($data['due_date']));
+    $description = isset($data['description']) ? mysqli_real_escape_string($con, trim($data['description'])) : '';
+    $assigned_to = !empty($data['assigned_to']) ? (int) $data['assigned_to'] : null;
+    $due_date = !empty($data['due_date']) ? date('Y-m-d', strtotime(trim($data['due_date']))) : null;
     $status = is_array($data['status']) ? ($data['status']['value'] ?? 'Not Started') : $data['status'];
     $status = mysqli_real_escape_string($con, $status);
 
@@ -136,11 +141,16 @@ function updateTask($con)
     $stmt = mysqli_prepare($con, $sql);
     mysqli_stmt_bind_param($stmt, "ssissi", $title, $description, $assigned_to, $due_date, $status, $id);
 
-    if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["message" => "Task updated successfully"]);
-    } else {
-        http_response_code(500);
-        echo json_encode(["message" => "Error updating task", "error" => mysqli_error($con)]);
+    try {
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(["message" => "Task updated successfully"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["message" => "Error updating task", "error" => mysqli_error($con)]);
+        }
+    } catch (\mysqli_sql_exception $e) {
+        http_response_code(400);
+        echo json_encode(["message" => "Error updating task", "error" => $e->getMessage()]);
     }
 
     mysqli_stmt_close($stmt);
@@ -149,9 +159,7 @@ function updateTask($con)
 // ✅ DELETE: Remove a task
 function deleteTask($con)
 {
-    $json = file_get_contents("php://input");
-    $data = json_decode($json, true);
-    $id = $data['id'] ?? null;
+    $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
     if (!$id) {
         http_response_code(400);

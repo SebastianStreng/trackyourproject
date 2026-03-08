@@ -10,6 +10,7 @@ import { ProjectService } from 'src/app/core/services/project-service/project-se
 import { AuthenticationService } from 'src/app/core/services/auth-service/authentification-service';
 import { ProjectMemberService } from 'src/app/core/services/projectmember-service/projectmember-service';
 import { ProjectMemberLinkService } from 'src/app/core/services/project-member-link-service/project-member-link-service';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   imports: [CommonModule, SharedModule, DialogCardComponent, TableModule, CheckboxModule],
@@ -37,9 +38,8 @@ export class AssignToNewProjectComponent implements OnInit {
       this.currentUser = user;
       console.log('Current user:', this.currentUser);
       this.loadProjects();
+      this.GetProjectMemberLinks();
     });
-
-    this.GetProjectMemberLinks(); 
   }
 
   private loadProjects(): void {
@@ -79,38 +79,40 @@ export class AssignToNewProjectComponent implements OnInit {
   
     this.createOrUpdate(this.currentUser.id, projectIds);
   }
-  
+
   createOrUpdate(memberId: number, projectIds: number[]) {
     this.projectMemberLinkService.getAll().subscribe({
       next: (existingLinks) => {
-        console.log('🔍 Checking existing project-member links:', existingLinks);
-  
         const currentUserLinks = existingLinks.filter(link => link.memberId === memberId);
         const existingProjectIds = currentUserLinks.map(link => link.projectId);
-  
+
         const newProjects = projectIds.filter(projectId => !existingProjectIds.includes(projectId));
         const removedProjects = existingProjectIds.filter(projectId => !projectIds.includes(projectId));
-  
-        console.log('➕ Projects to add:', newProjects);
-        console.log('➖ Projects to remove:', removedProjects);
-  
+
+        const requests: Observable<any>[] = [];
+
         newProjects.forEach(projectId => {
-          this.projectMemberLinkService.create(projectId, memberId ).subscribe({
-            next: (response) => console.log(`✅ Added user ${memberId} to project ${projectId}:`, response),
-            error: (err) => console.error(`❌ Error adding user ${memberId} to project ${projectId}:`, err),
-          });
+          requests.push(this.projectMemberLinkService.create(projectId, memberId));
         });
-  
-        if (removedProjects.length > 0) {
-          this.memberIdArray = [memberId]; 
-          for (const projectId of removedProjects) {
-            this.projectMemberLinkService.delete(projectId, memberId).subscribe({
-              next: (response) => console.log(`✅ Removed user ${memberId} from project ${projectId}:`, response),
-              error: (err) => console.error(`❌ Error removing user ${memberId} from project ${projectId}:`, err),
-            });
-          }
+
+        removedProjects.forEach(projectId => {
+          requests.push(this.projectMemberLinkService.delete(projectId, memberId));
+        });
+
+        if (requests.length > 0) {
+          forkJoin(requests).subscribe({
+            next: () => {
+              console.log('✅ All project-member links updated');
+              this.router.navigate(['/Selection']);
+            },
+            error: (err) => {
+              console.error('❌ Error updating project-member links:', err);
+              this.router.navigate(['/Selection']);
+            }
+          });
+        } else {
+          this.router.navigate(['/Selection']);
         }
-        
       },
       error: (err) => console.error('❌ Error fetching existing project-member links:', err),
     });

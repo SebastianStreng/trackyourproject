@@ -4,14 +4,15 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ProjectMember } from '../../models/project';
-import { jwtDecode } from 'jwt-decode'; 
+import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private baseUrl = 'http://localhost/api';
+  private baseUrl = environment.apiUrl;
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   private currentProjectMemberSubject = new BehaviorSubject<ProjectMember | null>(null);
 
@@ -25,7 +26,7 @@ export class AuthenticationService {
 
   /** 🔐 Login-Methode */
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login.php`, { email, password }).pipe(
+    return this.http.post(`${this.baseUrl}/login`, { email, password }).pipe(
       tap((response: any) => {
         if (response && response.token) {
           localStorage.setItem('token', response.token);

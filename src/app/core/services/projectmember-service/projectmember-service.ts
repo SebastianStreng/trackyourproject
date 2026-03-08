@@ -3,12 +3,13 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { ProjectMember } from '../../models/project';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectMemberService {
-  baseUrl = 'http://localhost/api';
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -45,7 +46,7 @@ export class ProjectMemberService {
   }
 
   update(member: ProjectMember): Observable<ProjectMember> {
-    return this.http.put<ProjectMember>(`${this.baseUrl}/update_project_member`, { data: member }).pipe(
+    return this.http.put<ProjectMember>(`${this.baseUrl}/project_members`, { data: member }).pipe(
       tap((res) => console.log('✅ User updated successfully:', res)),
       catchError((error: HttpErrorResponse) => {
         console.error('❌ Error updating user:', error);

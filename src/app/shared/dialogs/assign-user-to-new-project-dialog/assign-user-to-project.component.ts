@@ -73,7 +73,7 @@ export class AssignUserToProjectComponent implements OnInit {
     this.projectMemberLinkService.update(this.project.id, memberIds).subscribe({
       next: (response) => {
         console.log('✅ Add Users succefully:', response);
-        this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+        this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
       },
       error: (err) => {
         console.error('❌ ERROR - could not update users :', err);
@@ -145,10 +145,10 @@ export class AssignUserToProjectComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+    this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
   }
 
   closeDialog() {
-    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+    this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
   }
 }

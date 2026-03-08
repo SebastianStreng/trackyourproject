@@ -31,7 +31,7 @@ export class SelectionPageComponent {
     this.router.navigate(['/Projects'], { queryParams: { filter: 'all' } });
   }
 
-  navigateToEployees(){
+  navigateToEmployees(){
     this.router.navigate(['/AllEmployees']);
   }
 }

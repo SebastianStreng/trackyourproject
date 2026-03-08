@@ -10,13 +10,14 @@
           <div>Task ID: {{ task?.id }}</div>
       </div>
       <div class="right-info">
-          <p-select 
+          <p-select
               size="large"
               [style]="{'width': '160px'}"
-              [options]="statusOptions" 
-              [(ngModel)]="selectedStatus" 
-              optionLabel="label" 
-              [ngClass]="{'invalid': isInvalid.status}" 
+              [options]="statusOptions"
+              [(ngModel)]="selectedStatus"
+              optionLabel="label"
+              optionValue="value"
+              [ngClass]="{'invalid': isInvalid.status}"
               placeholder="Select Status"
               class="w-full md:w-56" />
       </div>
@@ -31,15 +32,16 @@
           [ngClass]="{'invalid': isInvalid.title}" 
       />
 
-      <p-select 
+      <p-select
           size="large"
           [style]="{'width': '300px'}"
-          [options]="members" 
-          [(ngModel)]="assignedTo" 
-          optionLabel="name" 
-          [ngClass]="{'invalid': isInvalid.assignedTo}" 
+          [options]="members"
+          [(ngModel)]="assignedTo"
+          optionLabel="name"
+          optionValue="id"
+          [ngClass]="{'invalid': isInvalid.assignedTo}"
           [placeholder]="assignedTo ? getAssignedMemberName(assignedTo) : 'Assign to Member'"
-          class="w-full md:w-56" 
+          class="w-full md:w-56"
       />
 
       <textarea pTextarea [(ngModel)]="description" 

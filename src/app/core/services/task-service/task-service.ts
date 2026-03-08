@@ -3,15 +3,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { Task, TaskStatus } from '../../models/project';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
 
-  baseUrl = 'http://localhost/api';
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
+
+  private formatDate(date: Date | string | null | undefined): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
 
   /**
    * ✅ Holt alle Tasks aus der API
@@ -49,11 +58,11 @@ createTask(task: Partial<Task>): Observable<Task> {
   console.log('📤 Sending request to create task:', task);
 
   return this.http.post<Task>(`${this.baseUrl}/tasks`, {
-    project_id: task.projectId,  // ✅ muss exakt so heißen wie in der Datenbank!
+    project_id: task.projectId,
     title: task.title,
     description: task.description,
     assigned_to: task.assignedTo,
-    due_date: task.dueDate,
+    due_date: this.formatDate(task.dueDate),
     status: task.status,
   }, { headers }).pipe(
     tap((newTask) => console.log('✅ Task Created:', newTask)),
@@ -79,7 +88,7 @@ updateTask(task: Task): Observable<Task> {
     title: task.title,
     description: task.description,
     assigned_to: task.assignedTo,
-    due_date: task.dueDate,
+    due_date: this.formatDate(task.dueDate),
     status: task.status,
   };
 

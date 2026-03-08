@@ -48,17 +48,18 @@ INSERT INTO projects (name, description, start_date, end_date) VALUES
 ('Blockchain Wallet', 'Kryptowährungs-Wallet mit Solidity und Ethereum Blockchain', '2024-08-10', '2025-02-28'),
 ('Lernplattform', 'E-Learning-Plattform mit Angular und Firebase', '2024-09-01', '2025-03-31');
 
-INSERT INTO project_members (name, email, password) VALUES 
-('Alice', 'alice@example.com', 'hashed_password_1'), 
-('Bob', 'bob@example.com', 'hashed_password_2'), 
-('Charlie', 'charlie@example.com', 'hashed_password_3'), 
-('David', 'david@example.com', 'hashed_password_4'), 
-('Emma', 'emma@example.com', 'hashed_password_5'), 
-('Frank', 'frank@example.com', 'hashed_password_6'), 
-('Grace', 'grace@example.com', 'hashed_password_7'), 
-('Henry', 'henry@example.com', 'hashed_password_8'), 
-('Ivy', 'ivy@example.com', 'hashed_password_9'), 
-('Jack', 'jack@example.com', 'hashed_password_10');
+-- All seed users have password: password123
+INSERT INTO project_members (name, email, password) VALUES
+('Alice', 'alice@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Bob', 'bob@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Charlie', 'charlie@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('David', 'david@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Emma', 'emma@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Frank', 'frank@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Grace', 'grace@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Henry', 'henry@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Ivy', 'ivy@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi'),
+('Jack', 'jack@example.com', '$2y$10$d1TlyRoS3mZXOWgWOYb65eyBaaoMaaqS74s8F7IX/D.yga4EUW7pi');
 
 
 INSERT INTO project_member_links (project_id, member_id) VALUES 

@@ -32,22 +32,20 @@ export class ProjectsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 🔥 Lade den eingeloggten Benutzer
     this.authService.getCurrentProjectMember().subscribe(user => {
       this.currentUser = user;
       console.log('Current User:', this.currentUser);
+
+      this.route.queryParams.subscribe(params => {
+        const filter = params['filter'];
+
+        if (filter === 'mine') {
+          this.loadUserProjects();
+        } else {
+          this.loadAllProjects();
+        }
+      });
     });
-
-    this.route.queryParams.subscribe(params => {
-      const filter = params['filter'];
-
-      if (filter === 'mine') {
-        this.loadUserProjects();
-      } else {
-        this.loadAllProjects();
-      }
-    });
-
   }
 
   loadUserProjects() {

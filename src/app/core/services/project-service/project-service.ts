@@ -4,12 +4,13 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Project } from '../../models/project';
 import { HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
-baseUrl = 'http://localhost/api';
+baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -51,16 +52,19 @@ baseUrl = 'http://localhost/api';
     );
   }
 
+  private formatDate(date: Date | string | null | undefined): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
   create(project: Project) {
-    // Konvertiere Date-Objekte in das richtige Format
     const formattedProject = {
       ...project,
-      start_date: project.startDate 
-        ? new Date(project.startDate).toISOString().split('T')[0] 
-        : null,
-      end_date: project.endDate 
-        ? new Date(project.endDate).toISOString().split('T')[0] 
-        : null
+      start_date: this.formatDate(project.startDate),
+      end_date: this.formatDate(project.endDate),
     };
   
     console.log('📤 Sending formatted project data:', formattedProject);

@@ -21,6 +21,7 @@ export class LoginPageComponent {
   constructor(private router: Router, private authService: AuthenticationService) {}
 
   login() {
+    this.errorMessage = '';
     if (!this.email || !this.password) {
       this.errorMessage = 'All fields are required!';
       return;

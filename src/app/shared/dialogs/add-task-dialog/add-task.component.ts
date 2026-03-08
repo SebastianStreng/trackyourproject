@@ -26,7 +26,7 @@ export class AddTaskComponent implements OnInit {
   project!: Project; 
   task: Task | null = null;
   title? : string;
-  assignedTo!: number; 
+  assignedTo: number | null = null;
   members: ProjectMember[] = [];
   description = '';
   dueDate= '';
@@ -88,7 +88,7 @@ export class AddTaskComponent implements OnInit {
 
     this.title = this.task?.title ?? '';  
     this.description = this.task?.description ?? '';
-    this.assignedTo = this.task?.assignedTo ?? 0;  
+    this.assignedTo = this.task?.assignedTo ?? null;
     this.dueDate = this.task?.dueDate ? new Date(this.task.dueDate).toISOString().substring(0, 10) : '';
     this.selectedStatus = this.task?.status ?? TaskStatus.NotStarted;
   
@@ -168,10 +168,10 @@ export class AddTaskComponent implements OnInit {
   AddOrUpdateTask() {
     const taskData: Task = {
       id: this.task ? this.task.id : 0,
-      projectId: this.project?.id ?? '',  // Ensure it's not 0
-      title: this.title ?? '',  
+      projectId: this.project?.id ?? 0,
+      title: this.title ?? '',
       description: this.description ?? '',
-      assignedTo: this.assignedTo ?? 0,  // IS not a number !!! needs to
+      assignedTo: this.assignedTo || null,
       dueDate: this.dueDate ? new Date(this.dueDate) : null,
       status: this.selectedStatus ?? TaskStatus.NotStarted,
     };
@@ -181,7 +181,7 @@ export class AddTaskComponent implements OnInit {
       this.taskService.updateTask(taskData).subscribe({
         next: (updatedTask) => {
           console.log('Task updated:', updatedTask);
-          //this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+          this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
         },
         error: (err) => console.error('Error updating task:', err),
       });
@@ -189,7 +189,7 @@ export class AddTaskComponent implements OnInit {
       this.taskService.createTask(taskData).subscribe({
         next: (createdTask) => {
           console.log('Task created:', createdTask);
-          //this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+          this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
         },
         error: (err) => console.error('Error creating task:', err),
       });
@@ -197,7 +197,7 @@ export class AddTaskComponent implements OnInit {
   }
   
   closeDialog() {
-    this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+    this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
   }
 
   goHome() {
@@ -205,7 +205,7 @@ export class AddTaskComponent implements OnInit {
   }
 
   goBack() {
-        this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+    this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
   }
 
   deleteTask() {
@@ -221,7 +221,7 @@ export class AddTaskComponent implements OnInit {
     this.taskService.delete(this.task.id).subscribe({
       next: () => {
         console.log(`✅ Task ${this.task?.id} deleted successfully`);
-        this.router.navigate(['/ProjectInformation'], { state: { project: this.project } });
+        this.router.navigate(['/ProjectInformation'], { state: { selectedProject: this.project } });
       },
       error: (err) => {
         console.error(`❌ Error deleting task ${this.task?.id}:`, err);

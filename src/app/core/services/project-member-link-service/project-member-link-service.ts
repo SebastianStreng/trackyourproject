@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectMemberLinkService {
-  baseUrl = 'http://localhost/api';
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
